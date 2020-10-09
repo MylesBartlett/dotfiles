@@ -1,0 +1,24 @@
+{  
+  "diagnostic.checkCurrentLine": true,
+  "tslint.autoFixOnSave": true,
+  "tslint.enable": true,
+  "coc.preferences.jumpCommand": "drop",
+  "coc.preferences.rootPatterns": [".git", ".vscode"],
+  "coc.preferences.formatOnSaveFiletypes": ["python"],
+  "coc-actions.hideCursor": false,
+  "coc-actions.useCursorLine": true,
+  "diagnostic.checkCurrentLine": false,
+  "python.jediEnabled": false,
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Args": ["--max-line-length", "100"],
+  "python.formatting.provider": "black",
+  "python.formatting.blackArgs": ["--line-length", "100"],
+  "python.formatting.mypyEnabled": true,
+  "python.sortImports.args": [
+    "--line-length",
+    "100"
+  ],
+  "coc.preferences.extensionUpdateCheck": "daily"
+}
