@@ -1,21 +1,123 @@
+" ===================================
+" Plugins
+" ===================================
+" Specify a directory for plugins
+" - For Neovim: stdpath('data') . '/plugged'
+call plug#begin('~/.vim/plugged')
+" Make sure you use single quotes
+
+" Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
+Plug 'junegunn/vim-easy-align'
+
+" Any valid git URL is allowed
+Plug 'https://github.com/junegunn/vim-github-dashboard.git'
+
+" Multiple Plug commands can be written in a single line using | separators
+" Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+
+
+" On-demand loading
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+
+" Using a non-default branch
+Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
+
+" Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
+Plug 'fatih/vim-go', { 'tag': '*' }
+
+" Plugin options
+Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
+
+" Plugin outside ~/.vim/plugged with post-update hook
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+" Unmanaged plugin (manually installed and updated)
+Plug '~/my-prototype-plugin'
+
+" Semantic highlighting for Python "
+Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins', 'for': 'python' }
+
+Plug 'justinmk/vim-sneak'
+
+Plug 'tpope/vim-fugitive'
+
+Plug 'preservim/nerdtree'
+
+Plug 'sheerun/vim-polyglot'
+
+Plug 'vim-scripts/vim-auto-save'
+
+" Use release branch (recommend)
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc-highlight', 
+Plug 'neoclide/coc-snippets'
+Plug 'neoclide/coc-prettier', 
+Plug 'neoclide/coc-lists',
+
+Plug 'Vimjas/vim-python-pep8-indent'
+
+Plug 'tpope/vim-surround'
+
+Plug 'airblade/vim-rooter'
+
+Plug 'psf/black', { 'branch': 'stable' }
+
+Plug 'camspiers/animate.vim'
+
+Plug 'camspiers/lens.vim'
+
+Plug 'itchyny/lightline.vim' 
+Plug 'mhinz/vim-signify'
+
+Plug 'tpope/vim-commentary'
+
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+
+" If you have nodejs and yarn
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+
+Plug 'morhetz/gruvbox'
+
+call plug#end()
+
+" Colorscheme
+set termguicolors     " enable true colors support
+colorscheme gruvbox
+
 " General Settings
 set relativenumber
 set autochdir
 set history=1000  " remember more commands and search history
 set undolevels=10000  " maximum number of changes that can be undone
 set undoreload=100000  " maximum number lines to save for undo on a buffer reload
-set splitright  " I prefer splitting right and below
+set splitright  " prefer splitting right and below
 set splitbelow
 
+" Highlighting in cursor line
+set cursorline
+
+" Automatic indentation
 set autoindent
+
+" Enable hidden buffers
+set hidden
+
+" Searching
 set hlsearch
 set incsearch
 set smartcase
+
 set laststatus=2
 set mouse=a  " change cursor per mode
 set wrapscan  " begin search from top of file when nothing is found anymore
 set noerrorbells  " remove bells (I think this is default in neovim)
 set visualbell
+
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
 
 " Vertical line delineating column-limit
 set colorcolumn=100
@@ -36,8 +138,6 @@ nnoremap <Leader>, :nohlsearch<cr>
 "substitutes upwards.
 nnoremap c* /\<<C-R>=expand('<cword>')<CR>\>\C<CR>``cgn
 nnoremap c# ?\<<C-R>=expand('<cword>')<CR>\>\C<CR>``cgN
-"nnoremap d* /\<<C-r>=expand('<cword>')<CR>\>\C<CR>``dgn
-"noremap d# ?\<<C-r>=expand('<cword>')<CR>\>\C<CR>``dgN
 
 noremap <Leader>s :update<CR>
 noremap <leader>: :!
@@ -53,10 +153,6 @@ noremap <Leader>P "+p
 " Line movement
 nnoremap <Leader>m :m+
 nnoremap <Leader>M :m-
-nnoremap <S-Up> :m-2<CR>
-nnoremap <S-Down> :m+<CR>
-inoremap <S-Up> <Esc>:m-2<CR>
-inoremap <S-Down> <Esc>:m+<CR>
 
 " Enable easy tab-switching
 tnoremap <C-w>w <C-\><C-n><C-w>w
@@ -65,6 +161,10 @@ tnoremap <C-w>j <C-\><C-n><C-w>j
 tnoremap <C-w>k <C-\><C-n><C-w>k
 tnoremap <C-w>l <C-\><C-n><C-w>l
 tnoremap <C-n> <C-\><C-n>
+
+" Make < > shifts keep selection
+vnoremap < <gv
+vnoremap > >gv
 
 "  Resizing spilt windows
 noremap <silent> <C-H> :vertical resize +1<CR>
@@ -156,18 +256,11 @@ endif
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
-"inoremap <silent><expr> <TAB>
-"      \ pumvisible() ? "\<C-n>" :
-"      \ <SID>check_back_space() ? "\<TAB>" :
-"      \ coc#refresh()
-"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ?
-      \"\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -415,91 +508,3 @@ let g:mkdp_port = ''
 let g:mkdp_page_title = '「${name}」'
 
 
-" ===================================
-" Plugins
-" ===================================
-" Specify a directory for plugins
-" - For Neovim: stdpath('data') . '/plugged'
-call plug#begin('~/.vim/plugged')
-" Make sure you use single quotes
-
-" Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
-Plug 'junegunn/vim-easy-align'
-
-" Any valid git URL is allowed
-Plug 'https://github.com/junegunn/vim-github-dashboard.git'
-
-" Multiple Plug commands can be written in a single line using | separators
-"Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-
-" On-demand loading
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-
-" Using a non-default branch
-Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
-
-" Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
-Plug 'fatih/vim-go', { 'tag': '*' }
-
-" Plugin options
-Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
-
-" Plugin outside ~/.vim/plugged with post-update hook
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-" Unmanaged plugin (manually installed and updated)
-Plug '~/my-prototype-plugin'
-
-" Semantic highlighting for Python "
-Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins', 'for': 'python' }
-
-Plug 'justinmk/vim-sneak'
-
-Plug 'tpope/vim-fugitive'
-
-Plug 'preservim/nerdtree'
-
-Plug 'sheerun/vim-polyglot'
-
-Plug 'vim-scripts/vim-auto-save'
-
-" Use release branch (recommend)
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'neoclide/coc-highlight', 
-Plug 'neoclide/coc-snippets'
-Plug 'neoclide/coc-prettier', 
-Plug 'neoclide/coc-lists',
-
-Plug 'Vimjas/vim-python-pep8-indent'
-
-Plug 'tpope/vim-surround'
-
-Plug 'airblade/vim-rooter'
-
-Plug 'psf/black', { 'branch': 'stable' }
-
-Plug 'camspiers/animate.vim'
-
-Plug 'camspiers/lens.vim'
-
-Plug 'itchyny/lightline.vim' 
-Plug 'mhinz/vim-signify'
-
-Plug 'tpope/vim-commentary'
-
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/limelight.vim'
-
-" If you have nodejs and yarn
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
-
-Plug 'morhetz/gruvbox'
-
-call plug#end()
-
-" Colorscheme
-set termguicolors     " enable true colors support
-"colorscheme ayu
-colorscheme gruvbox
