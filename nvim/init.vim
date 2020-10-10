@@ -89,13 +89,6 @@ augroup END
 " ==============
 " PLUGIN: Sneak 
 " ==============
-" nmap \ <Plug>Sneak_s
-" nmap \| <Plug>Sneak_S
-" xmap \ <Plug>Sneak_s
-" xmap \| <Plug>Sneak_S
-" omap \ <Plug>Sneak_s
-" omap \| <Plug>Sneak_S
-
 map f <Plug>Sneak_f
 map F <Plug>Sneak_F
 
@@ -468,15 +461,9 @@ Plug 'tpope/vim-fugitive'
 
 Plug 'preservim/nerdtree'
 
-Plug 'davidhalter/jedi-vim'
-
 Plug 'sheerun/vim-polyglot'
 
-Plug 'majutsushi/tagbar'
-
 Plug 'vim-scripts/vim-auto-save'
-
-Plug 'universal-ctags/ctags'
 
 " Use release branch (recommend)
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -497,8 +484,6 @@ Plug 'camspiers/animate.vim'
 
 Plug 'camspiers/lens.vim'
 
-Plug 'colmbus72/slim'
-
 Plug 'itchyny/lightline.vim' 
 Plug 'mhinz/vim-signify'
 
@@ -510,17 +495,11 @@ Plug 'junegunn/limelight.vim'
 " If you have nodejs and yarn
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
-Plug 'rhysd/open-pdf.vim'
-
-Plug 'ayu-theme/ayu-vim'
 Plug 'morhetz/gruvbox'
-Plug 'srcery-colors/srcery-vim'
 
 call plug#end()
 
 " Colorscheme
 set termguicolors     " enable true colors support
-let ayucolor="dark"   " for dark version of theme
 "colorscheme ayu
 colorscheme gruvbox
-"colorscheme srcery
