@@ -1,4 +1,7 @@
 {  
+  "diagnostic.virtualText": true,
+  "diagnostic.virtualTextCurrentLineOnly": true,
+  "diagnostic.virtualTextPrefix":"■ ",
   "diagnostic.checkCurrentLine": true,
   "tslint.autoFixOnSave": true,
   "tslint.enable": true,

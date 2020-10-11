@@ -9,13 +9,12 @@ call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-rooter'
 Plug 'camspiers/animate.vim'
 Plug 'camspiers/lens.vim'
+Plug 'janko-m/vim-test'
 
 " Plugin outside ~/.vim/plugged with post-update hook
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-
-Plug 'janko-m/vim-test'
 
 " Semantic highlighting for Python "
 Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins', 'for': 'python' }
@@ -35,7 +34,6 @@ Plug 'sheerun/vim-polyglot'
 Plug 'raimon49/requirements.txt.vim'  " syntax highlighting for requirements.txt
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'psf/black', { 'branch': 'stable' }
-Plug 'universal-ctags/ctags'
 
 " ---------Status bar --------
 Plug 'itchyny/lightline.vim' 
@@ -49,6 +47,8 @@ Plug 'junegunn/vim-easy-align'  " line stuff up with ga motion
 Plug 'tpope/vim-repeat'  " repeat supported plugin maps
 Plug 'junegunn/vim-easy-align'  " line stuff up with ga motion
 
+
+" --------- Writing ---------
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 
@@ -108,7 +108,7 @@ set shortmess+=c
 
 " Vertical line delineating column-limit
 set colorcolumn=100
-hi ColorColumn ctermbg=lightcyan guibg=blue
+hi ColorColumn ctermbg=lightcyan guibg=#cc241d
 " Highlight characters that are over the column-limit
 highlight OverLength ctermbg=red ctermfg=white guibg=#592929
 match OverLength /\%101v.\+/
@@ -119,7 +119,8 @@ nnoremap <Leader><Leader> zz
 nnoremap U <C-R> 
 nnoremap <Leader>0 :source ~/.config/nvim/init.vim <Enter>
 nnoremap <Leader>, :nohlsearch<cr>
-"replaces the word under cursor for whatever you want; after that, you can keep pressing  . and
+"
+"Replaces the word under cursor for whatever you want; after that, you can keep pressing  . and
 "it will keep substituting all the instances of the original word (ala multiple cursors). You can 
 "skip them with n (as you would in a normal search). The second mapping goes the other way around:
 "substitutes upwards.
@@ -128,8 +129,8 @@ nnoremap c# ?\<<C-R>=expand('<cword>')<CR>\>\C<CR>``cgN
 
 noremap <Leader>s :update<CR>
 noremap <leader>: :!
-nnoremap <Leader>io o<Esc>k
-nnoremap <Leader>iO O<Esc>j
+nnoremap <Leader><Enter> o<Esc>k
+nnoremap <Leader><S-Enter> O<Esc>j
 
 " Copy/paste shortcuts
 noremap <Leader>y "*y
@@ -139,7 +140,7 @@ noremap <Leader>P "+p
 
 " Line movement
 nnoremap <Leader>m :m+
-nnoremap <Leader>M :m-
+nnoremap <Leader>M :m-1-
 
 " Enable easy tab-switching
 tnoremap <C-w>w <C-\><C-n><C-w>w
@@ -244,6 +245,8 @@ endif
 "       \ coc#refresh()
 " inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
+" Use tab to trigger completion and close the completion menu, relying on
+" fuzzy matching opposed to menu cycling with <Tab>/<S-Tab>
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? coc#_select_confirm() :
       \ coc#expandableOrJumpable() ?
@@ -355,21 +358,21 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 "" Mappings for CoCList
 "" Show all diagnostics.
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+nnoremap <silent><nowait> <Leader>i  :<C-u>CocList diagnostics<cr>
 " Manage extensions.
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+nnoremap <silent><nowait> <Leader>e  :<C-u>CocList extensions<cr>
 " Show commands.
-nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+nnoremap <silent><nowait> <Leader>c  :<C-u>CocList commands<cr>
+" Find symbol of current doCument.
+nnoremap <silent><nowait> <Leader>o  :<C-u>CocList outline<cr>
 " Search workspace symbols
-nnoremap <silent><nowait> <space>O :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+nnoremap <silent><nowait> <Leader>O :<C-u>CocList -I symbols<cr>
+" Do default action for nexT item.
+nnoremap <silent><nowait> <Leader>j  :<C-u>CocNext<CR>
+" Do default action for preVious item.
+nnoremap <silent><nowait> <Leader>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
-nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+nnoremap <silent><nowait> <Leader>l  :<C-u>CocListResume<CR>
 
 " ======================================
 " Lightline (status bar) configuration
@@ -397,8 +400,6 @@ let g:lightline.component = {
     \ 'percent': '',
     \ }
 
-command! Slack :call slim#StartSlack()
-			
 " ==================
 " Goyo configuration
 " ==================
