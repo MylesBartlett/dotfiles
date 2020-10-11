@@ -375,7 +375,7 @@ autocmd BufEnter * lua require'completion'.on_attach()
 autocmd BufEnter * lua require'diagnostic'.on_attach()
 
 " Mappings
-nnoremap <silen1t> <Leader>d	<cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> <Leader>d	<cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> K		<cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> <Leader>D	<cmd>lua vim.lsp.buf.implementation()<CR>
 nnoremap <silent> <c-k>		<cmd>lua vim.lsp.buf.signature_help()<CR>
@@ -384,7 +384,7 @@ nnoremap <silent> gr		<cmd>lua vim.lsp.buf.references()<CR>
 nnoremap <silent> <Leader>r	<cmd>lua vim.lsp.buf.rename()<CR>
 nnoremap <silent> <Leader>o	<cmd>lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <silent> <Leader>O	<cmd>lua vim.lsp.buf.workspace_symbol()<CR>
-" nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
 
 " ===================
 " Completion settings
