@@ -9,6 +9,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-rooter'
 Plug 'camspiers/animate.vim'
 Plug 'camspiers/lens.vim'
+
 " Plugin outside ~/.vim/plugged with post-update hook
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -18,8 +19,6 @@ Plug 'janko-m/vim-test'
 
 " Semantic highlighting for Python "
 Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins', 'for': 'python' }
-
-Plug 'justinmk/vim-sneak'
 
 " ----------- Git -----------
 Plug 'tpope/vim-fugitive'
@@ -37,10 +36,11 @@ Plug 'raimon49/requirements.txt.vim'  " syntax highlighting for requirements.txt
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'psf/black', { 'branch': 'stable' }
 
-
+" ---------Status bar --------
 Plug 'itchyny/lightline.vim' 
 
 " --------- Editing ---------
+Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-surround'
 Plug 'farmergreg/vim-lastplace'  " remember cursor position
 Plug 'tpope/vim-commentary'
