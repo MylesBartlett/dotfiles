@@ -46,7 +46,8 @@ Plug 'tpope/vim-commentary'
 Plug 'junegunn/vim-easy-align'  " line stuff up with ga motion
 Plug 'tpope/vim-repeat'  " repeat supported plugin maps
 Plug 'junegunn/vim-easy-align'  " line stuff up with ga motion
-
+" Rainbow Parentheses Improved, shorter code, no level limit, smooth and fast, powerful configuration.
+Plug 'luochen1990/rainbow'
 
 " --------- Writing ---------
 Plug 'junegunn/goyo.vim'
@@ -129,14 +130,23 @@ nnoremap c# ?\<<C-R>=expand('<cword>')<CR>\>\C<CR>``cgN
 
 noremap <Leader>s :update<CR>
 noremap <leader>: :!
-nnoremap <Leader><Enter> o<Esc>k
-nnoremap <Leader><S-Enter> O<Esc>j
 
 " Copy/paste shortcuts
-noremap <Leader>y "*y
-noremap <Leader>p "*p
-noremap <Leader>Y "+y
-noremap <Leader>P "+p
+nnoremap Y y$
+nmap cy "+y
+nmap cd "+d
+
+xmap gy "+y
+xmap gd "+d
+
+nnoremap <silent> cp  "+p
+nnoremap <silent> cP  "+P
+nnoremap <silent> cgp "+gp
+nnoremap <silent> cgP "+gP
+
+" Save and Quit buffer
+nnoremap <silent> <Leader>x :x<CR>
+vmap              <Leader>x <Esc><Leader>x
 
 " Line movement
 nnoremap <Leader>m :m+
@@ -373,6 +383,8 @@ nnoremap <silent><nowait> <Leader>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <Leader>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <Leader>l  :<C-u>CocListResume<CR>
+" Open a new terminal and activate the CoC-set environment
+nnoremap <Leader>nt :CocCommand python.createTerminal<CR>
 
 " ======================================
 " Lightline (status bar) configuration
