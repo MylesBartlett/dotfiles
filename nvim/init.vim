@@ -108,7 +108,7 @@ set visualbell
 set shortmess+=c
 
 " Vertical line delineating column-limit
-set colorcolumn=100
+set colorcolumn=101
 hi ColorColumn ctermbg=lightcyan guibg=#cc241d
 " Highlight characters that are over the column-limit
 highlight OverLength ctermbg=red ctermfg=white guibg=#592929
