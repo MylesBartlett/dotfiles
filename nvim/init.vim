@@ -153,6 +153,9 @@ vmap              <Leader>x <Esc><Leader>x
 nnoremap <Leader>m :m+
 nnoremap <Leader>M :m-1-
 
+" Sorting
+nnoremap <C-s> :sort
+
 " Enable easy tab-switching
 tnoremap <C-w>w <C-\><C-n><C-w>w
 tnoremap <C-w>h <C-\><C-n><C-w>h
@@ -255,6 +258,14 @@ endif
 "       \ coc#refresh()
 " inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
+" Use <c-space> to trigger completion.
+
+" if has('nvim')
+"   inoremap <silent><expr> <c-space> coc#refresh()
+" else
+"   inoremap <silent><expr> <c-@> coc#refresh()
+" endif
+
 " Use tab to trigger completion and close the completion menu, relying on
 " fuzzy matching opposed to menu cycling with <Tab>/<S-Tab>
 inoremap <silent><expr> <TAB>
@@ -268,13 +279,6 @@ function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
-
-" Use <c-space> to trigger completion.
-if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
-else
-  inoremap <silent><expr> <c-@> coc#refresh()
-endif
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
 " position. Coc only does snippet and additional edit on confirm.
