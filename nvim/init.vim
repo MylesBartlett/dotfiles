@@ -168,8 +168,8 @@ vnoremap > >gv
 "  Resizing spilt windows
 noremap <silent> <C-H> :vertical resize +1<CR>
 noremap <silent> <C-L> :vertical resize -1<CR>
-noremap <silent> <C-J> :resize +1<CR>
-noremap <silent> <C-K> :resize -1<CR>
+noremap <silent> <C-K> :resize +1<CR>
+noremap <silent> <C-J> :resize -1<CR>
 
 " Commenting with Commentary
 nmap \ <Plug>Commentary
