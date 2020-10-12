@@ -3,7 +3,8 @@
   "diagnostic.virtualTextCurrentLineOnly": true,
   "diagnostic.virtualTextPrefix":"<< ",
   "diagnostic.checkCurrentLine": true,
-  "python.analysis.typeCheckingMode": "off",
+  "diagnostic.enableMessage": true,
+  "python.analysis.typeCheckingMode": "basic",
   "tslint.autoFixOnSave": true,
   "tslint.enable": true,
   "coc.preferences.jumpCommand": "drop",
@@ -20,7 +21,7 @@
   "python.linting.flake8Args": ["--max-line-length", "100"],
   "python.formatting.provider": "black",
   "python.formatting.blackArgs": ["--line-length", "100"],
-  "python.formatting.mypyEnabled": true,
+  "python.formatting.mypyEnabled": false,
   "python.sortImports.args": [
     "--line-length",
     "100"
