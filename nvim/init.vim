@@ -110,7 +110,7 @@ set cursorline
 " hi CursorLine guibg=#666666
 " Vertical line delineating column-limit
 set colorcolumn=101
-hi ColorColumn ctermbg=lightcyan guibg=#cc241d
+hi ColorColumn ctermbg=lightcyan guibg=#3C3836
 " Highlight characters that are over the column-limit
 highlight OverLength ctermbg=red ctermfg=white guibg=#592929
 match OverLength /\%101v.\+/
