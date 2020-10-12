@@ -56,7 +56,8 @@ Plug 'junegunn/limelight.vim'
 " If you have nodejs and yarn
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
-Plug 'morhetz/gruvbox'
+" Color scheme
+Plug 'lifepillar/vim-gruvbox8'
 
 " LSP
 " Use release branch (recommend)
@@ -66,14 +67,14 @@ Plug 'neoclide/coc-snippets'
 Plug 'neoclide/coc-prettier', 
 Plug 'neoclide/coc-lists',
 
-
-Plug 'morhetz/gruvbox'
-
 call plug#end()
 
-" Colorscheme
+" Appearance
 set termguicolors     " enable true colors support
-colorscheme gruvbox
+" lifepillar/vim-gruvbox8
+set background=dark
+colorscheme gruvbox8
+let g:gruvbox_italic = 1
 
 " General Settings
 set relativenumber
@@ -83,9 +84,6 @@ set undolevels=10000  " maximum number of changes that can be undone
 set undoreload=100000  " maximum number lines to save for undo on a buffer reload
 set splitright  " prefer splitting right and below
 set splitbelow
-
-" Highlighting in cursor line
-set cursorline
 
 " Automatic indentation
 set autoindent
@@ -107,6 +105,9 @@ set visualbell
 " don't give |ins-completion-menu| messages.
 set shortmess+=c
 
+" Highlighting in cursor line
+set cursorline
+" hi CursorLine guibg=#666666
 " Vertical line delineating column-limit
 set colorcolumn=101
 hi ColorColumn ctermbg=lightcyan guibg=#cc241d
