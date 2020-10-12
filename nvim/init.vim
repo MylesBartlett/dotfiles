@@ -168,6 +168,18 @@ tnoremap <C-n> <C-\><C-n>
 vnoremap < <gv
 vnoremap > >gv
 
+" ----------------------------------------------------------------------------
+" ?ie | entire object
+" ----------------------------------------------------------------------------
+xnoremap <silent> ie gg0oG$
+onoremap <silent> ie :<C-U>execute "normal! m`"<Bar>keepjumps normal! ggVG<CR>
+
+" ----------------------------------------------------------------------------
+" ?il | inner line
+" ----------------------------------------------------------------------------
+xnoremap <silent> il <Esc>^vg_
+onoremap <silent> il :<C-U>normal! ^vg_<CR>
+
 "  Resizing spilt windows
 noremap <silent> <C-H> :vertical resize +1<CR>
 noremap <silent> <C-L> :vertical resize -1<CR>
