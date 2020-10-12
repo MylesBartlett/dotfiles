@@ -77,6 +77,7 @@ colorscheme gruvbox8
 let g:gruvbox_italic = 1
 
 " General Settings
+set number
 set relativenumber
 set autochdir
 set history=1000  " remember more commands and search history
