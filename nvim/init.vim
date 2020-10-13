@@ -159,6 +159,8 @@ nnoremap <Leader>M :m-1-
 nnoremap <C-s> :sort
 
 " Enable easy tab-switching
+nnoremap [w <C-w>W
+nnoremap ]w <C-w>w 
 tnoremap <C-w>w <C-\><C-n><C-w>w
 tnoremap <C-w>h <C-\><C-n><C-w>h
 tnoremap <C-w>j <C-\><C-n><C-w>j
