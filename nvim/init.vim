@@ -48,6 +48,7 @@ Plug 'tpope/vim-repeat'  " repeat supported plugin maps
 Plug 'junegunn/vim-easy-align'  " line stuff up with ga motion
 " Rainbow Parentheses Improved, shorter code, no level limit, smooth and fast, powerful configuration.
 Plug 'luochen1990/rainbow'
+Plug 'tpope/vim-unimpaired' " pairs of handy bracket mappings
 
 " --------- Writing ---------
 Plug 'junegunn/goyo.vim'
@@ -393,7 +394,7 @@ nnoremap <silent><nowait> <Leader>c  :<C-u>CocList commands<cr>
 " Find symbol of current doCument.
 nnoremap <silent><nowait> <Leader>o  :<C-u>CocList outline<cr>
 " Search workspace symbols
-nnoremap <silent><nowait> <Leader>O :<C-u>CocList -I symbols<cr>
+nnoremap <silent><nowait> <Leader>w :<C-u>CocList -I symbols<cr>
 " Do default action for nexT item.
 nnoremap <silent><nowait> <Leader>j  :<C-u>CocNext<CR>
 " Do default action for preVious item.
