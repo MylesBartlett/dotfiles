@@ -34,6 +34,7 @@ Plug 'sheerun/vim-polyglot'
 Plug 'raimon49/requirements.txt.vim'  " syntax highlighting for requirements.txt
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'psf/black', { 'branch': 'stable' }
+Plug 'heavenshell/vim-pydocstring', { 'do': 'make install' }
 
 " ---------Status bar --------
 Plug 'itchyny/lightline.vim' 
@@ -58,8 +59,8 @@ Plug 'junegunn/limelight.vim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
 " Color scheme
-Plug 'lifepillar/vim-gruvbox8'
-
+" Plug 'lifepillar/vim-gruvbox8'
+Plug 'embark-theme/vim', { 'as': 'embark' }
 " LSP
 " Use release branch (recommend)
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -72,14 +73,14 @@ call plug#end()
 
 " Appearance
 set termguicolors     " enable true colors support
-" lifepillar/vim-gruvbox8
-set background=dark
-colorscheme gruvbox8
-let g:gruvbox_italic = 1
+colorscheme embark
+let g:embark_terminal_italics = 1
 
 " General Settings
 set number
 set relativenumber
+set autoread
+set backspace=indent,eol,start
 set autochdir
 set history=1000  " remember more commands and search history
 set undolevels=10000  " maximum number of changes that can be undone
@@ -159,14 +160,19 @@ nnoremap <Leader>M :m-1-
 nnoremap <C-s> :sort
 
 " Enable easy tab-switching
+" In normal mode
 nnoremap [w <C-w>W
 nnoremap ]w <C-w>w 
-tnoremap <C-w>w <C-\><C-n><C-w>w
-tnoremap <C-w>h <C-\><C-n><C-w>h
-tnoremap <C-w>j <C-\><C-n><C-w>j
-tnoremap <C-w>k <C-\><C-n><C-w>k
-tnoremap <C-w>l <C-\><C-n><C-w>l
-tnoremap <C-n> <C-\><C-n>
+noremap <C-h> <C-\><C-n><C-w>h
+noremap <C-j> <C-\><C-n><C-w>j
+noremap <C-k> <C-\><C-n><C-w>k
+noremap <C-l> <C-\><C-n><C-w>l
+" In terminal mode
+tnoremap <C-h> <C-\><C-n><C-w>h
+tnoremap <C-j> <C-\><C-n><C-w>j
+tnoremap <C-k> <C-\><C-n><C-w>k
+tnoremap <C-l> <C-\><C-n><C-w>l
+tnoremap <C-q> <C-\><C-n>
 
 " Make < > shifts keep selection
 vnoremap < <gv
@@ -183,12 +189,6 @@ onoremap <silent> ie :<C-U>execute "normal! m`"<Bar>keepjumps normal! ggVG<CR>
 " ----------------------------------------------------------------------------
 xnoremap <silent> il <Esc>^vg_
 onoremap <silent> il :<C-U>normal! ^vg_<CR>
-
-"  Resizing spilt windows
-noremap <silent> <C-H> :vertical resize +1<CR>
-noremap <silent> <C-L> :vertical resize -1<CR>
-noremap <silent> <C-K> :resize +1<CR>
-noremap <silent> <C-J> :resize -1<CR>
 
 " Commenting with Commentary
 nmap \ <Plug>Commentary
@@ -233,6 +233,11 @@ autocmd VimEnter * NERDTree
 autocmd VimEnter * wincmd p
 let g:NERDTreeChDirMode = 2
 nnoremap <leader>N :NERDTree .<CR>
+
+" Pydoctring
+autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
+nmap <silent> <Leader>_ <Plug>(pydocstring)
+let g:pydocstring_formatter = 'google'
 
 " =============
 " CoC settings
@@ -307,6 +312,7 @@ endif
 
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> gh <Plug>(coc-diagnostic-info)
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
@@ -416,7 +422,7 @@ function! CocCurrentFunction()
 endfunction
 
 let g:lightline = {
-      \ 'colorscheme': 'selenized_black',
+      \ 'colorscheme': 'embark',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'cocstatus', 'gitbranch', 'readonly', 'modified', 'relativepath'] ]

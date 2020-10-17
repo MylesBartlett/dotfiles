@@ -8,3 +8,14 @@ CLI
 timestamp
 txt
 py
+EDCompress
+Dataflows
+convolutional
+dataflow
+dataflows
+CIFAR10
+ImageNet
+MNIST
+ResNet50
+ResNet18
+stateful
