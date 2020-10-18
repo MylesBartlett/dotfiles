@@ -106,6 +106,9 @@ set wrapscan  " begin search from top of file when nothing is found anymore
 set noerrorbells  " remove bells (I think this is default in neovim)
 set visualbell
 
+" Folding
+set foldmethod=indent 
+
 " don't give |ins-completion-menu| messages.
 set shortmess+=c
 
