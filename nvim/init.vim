@@ -35,6 +35,7 @@ Plug 'raimon49/requirements.txt.vim'  " syntax highlighting for requirements.txt
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'psf/black', { 'branch': 'stable' }
 Plug 'heavenshell/vim-pydocstring', { 'do': 'make install' }
+Plug 'michaeljsmith/vim-indent-object'
 
 " ---------Status bar --------
 Plug 'itchyny/lightline.vim' 
@@ -135,6 +136,9 @@ nnoremap c# ?\<<C-R>=expand('<cword>')<CR>\>\C<CR>``cgN
 noremap <Leader>s :update<CR>
 noremap <leader>: :!
 
+" Mark-related shortcuts
+nnoremap <C-'> `
+
 " Copy/paste shortcuts
 nnoremap Y y$
 nmap cy "+y
@@ -161,8 +165,6 @@ nnoremap <C-s> :sort
 
 " Enable easy tab-switching
 " In normal mode
-nnoremap [w <C-w>W
-nnoremap ]w <C-w>w 
 noremap <C-h> <C-\><C-n><C-w>h
 noremap <C-j> <C-\><C-n><C-w>j
 noremap <C-k> <C-\><C-n><C-w>k
@@ -172,7 +174,7 @@ tnoremap <C-h> <C-\><C-n><C-w>h
 tnoremap <C-j> <C-\><C-n><C-w>j
 tnoremap <C-k> <C-\><C-n><C-w>k
 tnoremap <C-l> <C-\><C-n><C-w>l
-tnoremap <C-q> <C-\><C-n>
+tnoremap <C-n> <C-\><C-n>
 
 " Make < > shifts keep selection
 vnoremap < <gv
@@ -191,9 +193,9 @@ xnoremap <silent> il <Esc>^vg_
 onoremap <silent> il :<C-U>normal! ^vg_<CR>
 
 " Commenting with Commentary
-nmap \ <Plug>Commentary
-xmap \ <Plug>Commentary
-omap \ <Plug>Commentary
+nmap <C-c> <Plug>Commentary
+xmap <C-c>  <Plug>Commentary
+omap <C-c> <Plug>Commentary
 " ===========
 " Spellcheck
 " ===========
