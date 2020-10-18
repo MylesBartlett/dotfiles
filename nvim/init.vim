@@ -47,7 +47,6 @@ Plug 'farmergreg/vim-lastplace'  " remember cursor position
 Plug 'tpope/vim-commentary'
 Plug 'junegunn/vim-easy-align'  " line stuff up with ga motion
 Plug 'tpope/vim-repeat'  " repeat supported plugin maps
-Plug 'junegunn/vim-easy-align'  " line stuff up with ga motion
 " Rainbow Parentheses Improved, shorter code, no level limit, smooth and fast, powerful configuration.
 Plug 'luochen1990/rainbow'
 Plug 'tpope/vim-unimpaired' " pairs of handy bracket mappings
@@ -132,8 +131,8 @@ nnoremap <Leader>, :nohlsearch<cr>
 noremap <Leader>s :update<CR>
 nnoremap <C-i> ^
 nnoremap <C-a> $
-nnoremap <C-)> %
-nnoremap <leader>; :!
+nnoremap <C-[> %
+nnoremap <Leader>; :!
 
 " Mark-related shortcuts
 nnoremap <C-'> `
@@ -173,11 +172,11 @@ noremap <C-j> <C-\><C-n><C-w>j
 noremap <C-k> <C-\><C-n><C-w>k
 noremap <C-l> <C-\><C-n><C-w>l
 " In terminal mode
-tnoremap <C-h> <C-\><C-n><C-w>h
-tnoremap <C-j> <C-\><C-n><C-w>j
-tnoremap <C-k> <C-\><C-n><C-w>k
-tnoremap <C-l> <C-\><C-n><C-w>l
-tnoremap <C-n> <C-\><C-n>
+tnoremap <C-w>h <C-\><C-n><C-w>h
+tnoremap <C-w>j <C-\><C-n><C-w>j
+tnoremap <C-w>k <C-\><C-n><C-w>k
+tnoremap <C-w>l <C-\><C-n><C-w>l
+tnoremap <C-w> <C-\><C-n>
 
 " Make < > shifts keep selection
 vnoremap < <gv
