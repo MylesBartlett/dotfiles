@@ -7,6 +7,7 @@
   "python.analysis.typeCheckingMode": "basic",
   "tslint.autoFixOnSave": true,
   "tslint.enable": true,
+  "coc.preferences.formatOnType": true,
   "coc.preferences.jumpCommand": "drop",
   "coc.preferences.rootPatterns": [".git", ".vscode"],
   "coc.preferences.formatOnSaveFiletypes": ["markdown", "python", "yaml"],

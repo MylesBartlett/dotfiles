@@ -106,7 +106,7 @@ set noerrorbells  " remove bells (I think this is default in neovim)
 set visualbell
 
 " Folding
-set foldmethod=indent 
+set foldmethod=manual 
 
 " don't give |ins-completion-menu| messages.
 set shortmess+=c
@@ -291,6 +291,18 @@ endif
 "   inoremap <silent><expr> <c-@> coc#refresh()
 " endif
 
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
+" if exists('*complete_info')
+"   inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+" else
+"   inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" endif
+
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() :
+			 \"\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
 " Use tab to trigger completion and close the completion menu, relying on
 " fuzzy matching opposed to menu cycling with <Tab>/<S-Tab>
 inoremap <silent><expr> <TAB>
@@ -304,15 +316,6 @@ function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
-
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
-if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
 
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
