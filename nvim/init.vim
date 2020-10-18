@@ -71,6 +71,11 @@ Plug 'neoclide/coc-lists',
 
 call plug#end()
 
+if has('vim_starting')
+    set encoding=utf-8
+endif
+scriptencoding utf-8
+
 " Appearance
 set termguicolors     " enable true colors support
 colorscheme embark
@@ -135,7 +140,7 @@ nnoremap <C-[> %
 nnoremap <Leader>; :!
 
 " Mark-related shortcuts
-nnoremap <C-'> `
+nnoremap \ `
 
 "Replaces the word under cursor for whatever you want; after that, you can keep pressing  . and
 "it will keep substituting all the instances of the original word (ala multiple cursors). You can 
