@@ -120,24 +120,27 @@ highlight OverLength ctermbg=red ctermfg=white guibg=#592929
 match OverLength /\%101v.\+/
 
 " Keybindings
+" General
 let mapleader = " "
 nnoremap <Leader><Leader> zz
 nnoremap U <C-R> 
 nnoremap <Leader>0 :source ~/.config/nvim/init.vim <Enter>
 nnoremap <Leader>, :nohlsearch<cr>
-"
+noremap <Leader>s :update<CR>
+nnoremap <C-i> ^
+nnoremap <C-a> $
+nnoremap <C-)> %
+nnoremap <leader>; :!
+
+" Mark-related shortcuts
+nnoremap <C-'> `
+
 "Replaces the word under cursor for whatever you want; after that, you can keep pressing  . and
 "it will keep substituting all the instances of the original word (ala multiple cursors). You can 
 "skip them with n (as you would in a normal search). The second mapping goes the other way around:
 "substitutes upwards.
 nnoremap c* /\<<C-R>=expand('<cword>')<CR>\>\C<CR>``cgn
 nnoremap c# ?\<<C-R>=expand('<cword>')<CR>\>\C<CR>``cgN
-
-noremap <Leader>s :update<CR>
-noremap <leader>: :!
-
-" Mark-related shortcuts
-nnoremap <C-'> `
 
 " Copy/paste shortcuts
 nnoremap Y y$
@@ -159,9 +162,6 @@ vmap              <Leader>x <Esc><Leader>x
 " Line movement
 nnoremap <Leader>m :m+
 nnoremap <Leader>M :m-1-
-
-" Sorting
-nnoremap <C-s> :sort
 
 " Enable easy tab-switching
 " In normal mode
