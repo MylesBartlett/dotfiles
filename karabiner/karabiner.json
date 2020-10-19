@@ -120,6 +120,14 @@
                             "to": {
                                 "key_code": "left_shift"
                             }
+                        },
+                        {
+                            "from": {
+                                "key_code": "fn"
+                            },
+                            "to": {
+                                "key_code": "left_command"
+                            }
                         }
                     ]
                 }

@@ -134,10 +134,10 @@ nnoremap U <C-R>
 nnoremap <Leader>0 :source ~/.config/nvim/init.vim <Enter>
 nnoremap <Leader>, :nohlsearch<cr>
 noremap <Leader>s :update<CR>
-nnoremap <C-i> ^
-nnoremap <C-a> $
-nnoremap <C-[> %
-nnoremap <Leader>; :!
+noremap <C-i> ^
+noremap <C-a> $
+noremap <C-[> %
+nnoremap <Leader>; q:
 
 " Mark-related shortcuts
 nnoremap \ `
