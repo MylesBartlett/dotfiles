@@ -133,10 +133,10 @@ nnoremap <Leader><Leader> zz
 nnoremap U <C-R> 
 nnoremap <Leader>0 :source ~/.config/nvim/init.vim <Enter>
 nnoremap <Leader>, :nohlsearch<cr>
-noremap <Leader>s :update<CR>
-noremap <C-i> ^
-noremap <C-a> $
-noremap <C-[> %
+nnoremap <Leader>s :update<CR>
+nnoremap <C-i> ^
+nnoremap <C-a> $
+nnoremap <C-y> %
 nnoremap <Leader>; q:
 
 " Mark-related shortcuts
@@ -211,6 +211,15 @@ augroup markdownSpell
     autocmd FileType markdown setlocal spell
     autocmd BufRead,BufNewFile *.md setlocal spell
 augroup END
+
+
+" ==============
+" PLUGIN: Semshi
+" ==============
+" function MyCustomHighlights()
+" 	hi semshiParameter guifg=#71ebbc
+" endfunction
+" autocmd FileType python call MyCustomHighlights()
 
 " ==============
 " PLUGIN: Sneak 
