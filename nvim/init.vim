@@ -59,8 +59,10 @@ Plug 'junegunn/limelight.vim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
 " Color scheme
-" Plug 'lifepillar/vim-gruvbox8'
-Plug 'embark-theme/vim', { 'as': 'embark' }
+Plug 'lifepillar/vim-gruvbox8'
+Plug 'shinchu/lightline-gruvbox.vim'
+" Plug 'embark-theme/vim', { 'as': 'embark' }
+
 " LSP
 " Use release branch (recommend)
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -78,8 +80,13 @@ scriptencoding utf-8
 
 " Appearance
 set termguicolors     " enable true colors support
-colorscheme embark
-let g:embark_terminal_italics = 1
+set background=dark
+colorscheme gruvbox8
+let g:gruvbox_plugin_hi_groups = 1
+let g:gruvbox_italics = 1
+let g:gruvbox_bold = 1
+" colorscheme embark
+" let g:embark_terminal_italics = 1
 
 " General Settings
 set number
@@ -138,9 +145,6 @@ nnoremap <C-i> ^
 nnoremap <C-a> $
 nnoremap <C-y> %
 nnoremap <Leader>; q:
-
-" Mark-related shortcuts
-nnoremap \ `
 
 "Replaces the word under cursor for whatever you want; after that, you can keep pressing  . and
 "it will keep substituting all the instances of the original word (ala multiple cursors). You can 
@@ -242,11 +246,11 @@ nnoremap <silent> <Leader>h/ :History/<CR>
 set grepprg=rg\ --vimgrep\ --smart-case\ --follow
 
 " Auto-commands
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree")
-      \ && b:NERDTree.isTabTree()) | q | endif
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree")
+"       \ && b:NERDTree.isTabTree()) | q | endif
 
 " Start NERDTree
-autocmd VimEnter * NERDTree
+" autocmd VimEnter * NERDTree
 " Go to previous (last accessed) window.
 autocmd VimEnter * wincmd p
 let g:NERDTreeChDirMode = 2
@@ -443,7 +447,7 @@ function! CocCurrentFunction()
 endfunction
 
 let g:lightline = {
-      \ 'colorscheme': 'embark',
+      \ 'colorscheme': 'gruvbox',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'cocstatus', 'gitbranch', 'readonly', 'modified', 'relativepath'] ]
