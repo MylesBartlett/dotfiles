@@ -10,8 +10,10 @@ Plug 'airblade/vim-rooter'
 Plug 'camspiers/animate.vim'
 Plug 'camspiers/lens.vim'
 Plug 'janko-m/vim-test'
+Plug 'tpope/vim-eunuch'
+" disables search highlighting when you are done searching and re-enables it when you search agai
+Plug 'romainl/vim-cool'
 
-" Plugin outside ~/.vim/plugged with post-update hook
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -60,9 +62,7 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
 " Color scheme
 Plug 'lifepillar/vim-gruvbox8'
-Plug 'shinchu/lightline-gruvbox.vim'
-" Plug 'embark-theme/vim', { 'as': 'embark' }
-
+"
 " LSP
 " Use release branch (recommend)
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -84,9 +84,8 @@ set background=dark
 colorscheme gruvbox8
 let g:gruvbox_plugin_hi_groups = 1
 let g:gruvbox_italics = 1
+let g:gruvbox_italicize_strings = 1
 let g:gruvbox_bold = 1
-" colorscheme embark
-" let g:embark_terminal_italics = 1
 
 " General Settings
 set number
@@ -141,9 +140,6 @@ nnoremap U <C-R>
 nnoremap <Leader>0 :source ~/.config/nvim/init.vim <Enter>
 nnoremap <Leader>, :nohlsearch<cr>
 nnoremap <Leader>s :update<CR>
-nnoremap <C-i> ^
-nnoremap <C-a> $
-nnoremap <C-y> %
 nnoremap <Leader>; q:
 
 "Replaces the word under cursor for whatever you want; after that, you can keep pressing  . and
@@ -221,7 +217,9 @@ augroup END
 " PLUGIN: Semshi
 " ==============
 " function MyCustomHighlights()
-" 	hi semshiParameter guifg=#71ebbc
+" 	hi semshiParameter guifg=#b3ff6b
+" 	hi semshiImported  guifg=#3ade78 cterm=bold gui=bold
+" 	hi semshiSelf      guifg=#cd96fa
 " endfunction
 " autocmd FileType python call MyCustomHighlights()
 
@@ -246,11 +244,12 @@ nnoremap <silent> <Leader>h/ :History/<CR>
 set grepprg=rg\ --vimgrep\ --smart-case\ --follow
 
 " Auto-commands
-" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree")
-"       \ && b:NERDTree.isTabTree()) | q | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree")
+      \ && b:NERDTree.isTabTree()) | q | endif
 
 " Start NERDTree
-" autocmd VimEnter * NERDTree
+autocmd VimEnter * NERDTree
+let NERDTreeIgnore = ['\.pyc$', '\.egg-info$', '__pycache__']
 " Go to previous (last accessed) window.
 autocmd VimEnter * wincmd p
 let g:NERDTreeChDirMode = 2
@@ -268,7 +267,7 @@ let g:pydocstring_formatter = 'google'
 set hidden
 let g:coc_snippet_next = '<tab>'
 nmap <silent> <M-CR> <Plug>(coc-fix-current)
-autocmd BufWritePre *.py :CocCommand python.sortImports
+autocmd BufWritePre *.py :CocCommand pyright.organizeimports
 
 " Some servers have issues with backup files, see #649.
 set nobackup
@@ -295,40 +294,30 @@ endif
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
-" inoremap <silent><expr> <TAB>
-"       \ pumvisible() ? "\<C-n>" :
-"       \ <SID>check_back_space() ? "\<TAB>" :
-"       \ coc#refresh()
-" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 " Use <c-space> to trigger completion.
-
-" if has('nvim')
-"   inoremap <silent><expr> <c-space> coc#refresh()
-" else
-"   inoremap <silent><expr> <c-@> coc#refresh()
-" endif
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
 " position. Coc only does snippet and additional edit on confirm.
 " <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
-" if exists('*complete_info')
-"   inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-" else
-"   inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" endif
+if exists('*complete_info')
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
 
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() :
 			 \"\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
-" Use tab to trigger completion and close the completion menu, relying on
-" fuzzy matching opposed to menu cycling with <Tab>/<S-Tab>
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ?
-      \"\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -447,7 +436,7 @@ function! CocCurrentFunction()
 endfunction
 
 let g:lightline = {
-      \ 'colorscheme': 'gruvbox',
+      \ 'colorscheme': 'seoul256',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'cocstatus', 'gitbranch', 'readonly', 'modified', 'relativepath'] ]
