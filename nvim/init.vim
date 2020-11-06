@@ -62,7 +62,7 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
 " Color scheme
 Plug 'lifepillar/vim-gruvbox8'
-"
+
 " LSP
 " Use release branch (recommend)
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -81,11 +81,11 @@ scriptencoding utf-8
 " Appearance
 set termguicolors     " enable true colors support
 set background=dark
-colorscheme gruvbox8
 let g:gruvbox_plugin_hi_groups = 1
 let g:gruvbox_italics = 1
-let g:gruvbox_italicize_strings = 1
+let g:gruvbox_italicize_strings = 0
 let g:gruvbox_bold = 1
+colorscheme gruvbox8
 
 " General Settings
 set number
