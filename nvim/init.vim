@@ -1,9 +1,15 @@
 " ===================================
 " Plugins
 " ===================================
+
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
 " Specify a directory for plugins
-" - For Neovim: stdpath('data') . '/plugged'
-call plug#begin('~/.vim/plugged')
+call plug#begin('~/.config/nvim/plugged')
 " Make sure you use single quotes
 
 Plug 'airblade/vim-rooter'
@@ -153,10 +159,8 @@ nnoremap c# ?\<<C-R>=expand('<cword>')<CR>\>\C<CR>``cgN
 nnoremap Y y$
 nmap cy "+y
 nmap cd "+d
-
 xmap gy "+y
 xmap gd "+d
-
 nnoremap <silent> cp  "+p
 nnoremap <silent> cP  "+P
 nnoremap <silent> cgp "+gp
@@ -169,6 +173,13 @@ vmap              <Leader>x <Esc><Leader>x
 " Line movement
 nnoremap <Leader>m :m+
 nnoremap <Leader>M :m-1-
+nnoremap <CR> o<Esc>
+nnoremap <Leader><CR> O<Esc>
+nnoremap <Tab> >>
+nnoremap <S-Tab> <<
+" Make < > shifts keep selection
+vnoremap < <gv
+vnoremap > >gv
 
 " Enable easy tab-switching
 " In normal mode
@@ -176,16 +187,13 @@ noremap <C-h> <C-\><C-n><C-w>h
 noremap <C-j> <C-\><C-n><C-w>j
 noremap <C-k> <C-\><C-n><C-w>k
 noremap <C-l> <C-\><C-n><C-w>l
+
 " In terminal mode
 tnoremap <C-w>h <C-\><C-n><C-w>h
 tnoremap <C-w>j <C-\><C-n><C-w>j
 tnoremap <C-w>k <C-\><C-n><C-w>k
 tnoremap <C-w>l <C-\><C-n><C-w>l
 tnoremap <C-w> <C-\><C-n>
-
-" Make < > shifts keep selection
-vnoremap < <gv
-vnoremap > >gv
 
 " ----------------------------------------------------------------------------
 " ?ie | entire object
