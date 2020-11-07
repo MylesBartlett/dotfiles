@@ -174,8 +174,6 @@ nnoremap <Leader>m :m+
 nnoremap <Leader>M :m-1-
 nnoremap <CR> o<Esc>
 nnoremap <Leader><CR> O<Esc>
-nnoremap <Tab> >>
-nnoremap <S-Tab> <<
 " Make < > shifts keep selection
 vnoremap < <gv
 vnoremap > >gv
