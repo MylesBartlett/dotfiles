@@ -17,10 +17,9 @@ Plug 'camspiers/animate.vim'
 Plug 'camspiers/lens.vim'
 Plug 'janko-m/vim-test'
 Plug 'tpope/vim-eunuch'
-" disables search highlighting when you are done searching and re-enables it when you search agai
+" disables search highlighting when you are done searching and re-enables it when you search again
 Plug 'romainl/vim-cool'
 
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
