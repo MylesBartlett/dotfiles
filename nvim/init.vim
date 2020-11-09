@@ -210,6 +210,11 @@ onoremap <silent> il :<C-U>normal! ^vg_<CR>
 nmap <C-c> <Plug>Commentary
 xmap <C-c>  <Plug>Commentary
 omap <C-c> <Plug>Commentary
+
+" Surround like delete/change surrounding function calls
+nmap <silent> dsf ds)db
+nnoremap <silent> csf [(cb
+
 " ===========
 " Spellcheck
 " ===========
@@ -218,17 +223,6 @@ augroup markdownSpell
     autocmd FileType markdown setlocal spell
     autocmd BufRead,BufNewFile *.md setlocal spell
 augroup END
-
-
-" ==============
-" PLUGIN: Semshi
-" ==============
-" function MyCustomHighlights()
-" 	hi semshiParameter guifg=#b3ff6b
-" 	hi semshiImported  guifg=#3ade78 cterm=bold gui=bold
-" 	hi semshiSelf      guifg=#cd96fa
-" endfunction
-" autocmd FileType python call MyCustomHighlights()
 
 " ==============
 " PLUGIN: Sneak 
