@@ -19,6 +19,7 @@ Plug 'janko-m/vim-test'
 Plug 'tpope/vim-eunuch'
 " disables search highlighting when you are done searching and re-enables it when you search again
 Plug 'romainl/vim-cool'
+Plug 'frazrepo/vim-rainbow'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -91,6 +92,7 @@ let g:gruvbox_italics = 1
 let g:gruvbox_italicize_strings = 0
 let g:gruvbox_bold = 1
 colorscheme gruvbox8
+let g:rainbow_active = 1
 
 " General Settings
 set number
@@ -246,14 +248,20 @@ nnoremap <silent> <Leader>hh :History<CR>
 nnoremap <silent> <Leader>h: :History:<CR>
 nnoremap <silent> <Leader>h/ :History/<CR>
 
+" Use RG for grepping
 set grepprg=rg\ --vimgrep\ --smart-case\ --follow
+nnoremap <Leader>rs :s/\<<C-r><C-w>\>/
+nnoremap <Leader>rS :%s/\<<C-r><C-w>\>/
+nnoremap <Leader>rg :grep <<C-r><C-w>\> <bar> cfdo %s/\<<C-r><C-w>\>/
+nnoremap <Leader>S :bufdo update<CR>
 
 " Auto-commands
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree")
       \ && b:NERDTree.isTabTree()) | q | endif
 
-" Start NERDTree
-autocmd VimEnter * NERDTree
+" " Start NERDTree
+" autocmd VimEnter * NERDTree
+
 let NERDTreeIgnore = ['\.pyc$', '\.egg-info$', '__pycache__']
 " Go to previous (last accessed) window.
 autocmd VimEnter * wincmd p
