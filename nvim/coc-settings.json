@@ -9,7 +9,7 @@
   "coc.preferences.formatOnType": true,
   "coc.preferences.jumpCommand": "drop",
   "coc.preferences.rootPatterns": [".git", ".vscode"],
-  "coc.preferences.formatOnSaveFiletypes": ["markdown", "python", "yaml"],
+  "coc.preferences.formatOnSaveFiletypes": ["markdown", "python", "yaml", "rust"],
   "coc-actions.hideCursor": false,
   "coc-actions.useCursorLine": true,
   "python.analysis.typeCheckingMode": "basic",

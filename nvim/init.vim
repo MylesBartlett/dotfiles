@@ -20,6 +20,7 @@ Plug 'tpope/vim-eunuch'
 " disables search highlighting when you are done searching and re-enables it when you search again
 Plug 'romainl/vim-cool'
 Plug 'frazrepo/vim-rainbow'
+Plug 'kshenoy/vim-signature'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -147,6 +148,7 @@ nnoremap U <C-R>
 nnoremap <Leader>0 :source ~/.config/nvim/init.vim <Enter>
 nnoremap <Leader>, :nohlsearch<cr>
 nnoremap <Leader>s :update<CR>
+nnoremap <Leader>S :bufdo update<CR>
 nnoremap <Leader>; q:
 
 "Replaces the word under cursor for whatever you want; after that, you can keep pressing  . and
@@ -244,10 +246,10 @@ nnoremap <silent> <Leader>h/ :History/<CR>
 
 " Use RG for grepping
 set grepprg=rg\ --vimgrep\ --smart-case\ --follow
+
 nnoremap <Leader>rs :s/\<<C-r><C-w>\>/
 nnoremap <Leader>rS :%s/\<<C-r><C-w>\>/
 nnoremap <Leader>rg :grep <<C-r><C-w>\> <bar> cfdo %s/\<<C-r><C-w>\>/
-nnoremap <Leader>S :bufdo update<CR>
 
 " Auto-commands
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree")
