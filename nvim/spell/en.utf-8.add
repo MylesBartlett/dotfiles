@@ -19,3 +19,6 @@ MNIST
 ResNet50
 ResNet18
 stateful
+backpropagation
+CelebA
+Wasserstein

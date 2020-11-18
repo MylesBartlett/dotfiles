@@ -107,6 +107,14 @@
                     "simple_modifications": [
                         {
                             "from": {
+                                "key_code": "fn"
+                            },
+                            "to": {
+                                "key_code": "left_command"
+                            }
+                        },
+                        {
+                            "from": {
                                 "key_code": "non_us_backslash"
                             },
                             "to": {
@@ -119,14 +127,6 @@
                             },
                             "to": {
                                 "key_code": "left_shift"
-                            }
-                        },
-                        {
-                            "from": {
-                                "key_code": "fn"
-                            },
-                            "to": {
-                                "key_code": "left_command"
                             }
                         }
                     ]
