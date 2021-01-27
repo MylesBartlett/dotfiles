@@ -35,7 +35,7 @@ Plug 'rhysd/git-messenger.vim'  " popup commit message for cursor (:GitMessenger
 Plug 'tpope/vim-rhubarb'  " GitHub support for fugitive
 
 " On-demand loading
-Plug 'ms-jpq/chadtree'
+Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
 
 " ---------- Python ----------
 Plug 'sheerun/vim-polyglot'
