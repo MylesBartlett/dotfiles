@@ -8,9 +8,10 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-" Specify a directory for plugins
 call plug#begin('~/.config/nvim/plugged')
-" Make sure you use single quotes
+
+" Turn your browser¹ into a Neovim client 
+Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 
 Plug 'airblade/vim-rooter'
 Plug 'janko-m/vim-test'
@@ -34,8 +35,7 @@ Plug 'rhysd/git-messenger.vim'  " popup commit message for cursor (:GitMessenger
 Plug 'tpope/vim-rhubarb'  " GitHub support for fugitive
 
 " On-demand loading
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-Plug 'preservim/nerdtree'
+Plug 'ms-jpq/chadtree'
 
 " ---------- Python ----------
 Plug 'sheerun/vim-polyglot'
@@ -92,6 +92,9 @@ colorscheme gruvbox8
 let g:rainbow_active = 1
 
 " General Settings
+set undofile " Maintain undo history between sessions
+set undodir=~/.config/nvim/undodir
+
 set number
 set relativenumber
 set autoread
@@ -261,18 +264,10 @@ nnoremap <Leader>rs :s/\<<C-r><C-w>\>/
 nnoremap <Leader>rS :%s/\<<C-r><C-w>\>/
 nnoremap <Leader>rg :grep <<C-r><C-w>\> <bar> cfdo %s/\<<C-r><C-w>\>/
 
-" Auto-commands
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree")
-      \ && b:NERDTree.isTabTree()) | q | endif
-
-" " Start NERDTree
-" autocmd VimEnter * NERDTree
-
-let NERDTreeIgnore = ['\.pyc$', '\.egg-info$', '__pycache__']
-" Go to previous (last accessed) window.
-autocmd VimEnter * wincmd p
-let g:NERDTreeChDirMode = 2
-nnoremap <leader>N :NERDTree .<CR>
+" Toggle CHADTree
+nnoremap <Leader>v <cmd>CHADopen<cr>
+" Clear quick-fix list
+nnoremap <Leader>l <cmd>call setqflist([])<cr>
 
 " Pydoctring
 autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
