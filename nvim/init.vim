@@ -65,6 +65,7 @@ Plug 'junegunn/limelight.vim'
 
 " Color scheme
 Plug 'lifepillar/vim-gruvbox8'
+Plug 'franbach/miramare'
 
 " LSP
 " Use release branch (recommend)
@@ -88,7 +89,10 @@ let g:gruvbox_plugin_hi_groups = 1
 let g:gruvbox_italics = 1
 let g:gruvbox_italicize_strings = 0
 let g:gruvbox_bold = 1
-colorscheme gruvbox8
+ colorscheme gruvbox8
+let g:miramare_enable_italic = 1
+let g:miramare_disable_italic_comment = 1
+" colorscheme miramare
 let g:rainbow_active = 1
 
 " General Settings
