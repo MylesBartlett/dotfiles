@@ -10,9 +10,6 @@ endif
 
 call plug#begin('~/.config/nvim/plugged')
 
-" Turn your browser¹ into a Neovim client 
-Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
-
 Plug 'airblade/vim-rooter'
 Plug 'janko-m/vim-test'
 Plug 'tpope/vim-eunuch'
@@ -24,6 +21,7 @@ Plug 'kshenoy/vim-signature'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'machakann/vim-highlightedyank'
 
 " Semantic highlighting for Python "
 Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins', 'for': 'python' }
@@ -33,9 +31,6 @@ Plug 'tpope/vim-fugitive'
 Plug 'mhinz/vim-signify'
 Plug 'rhysd/git-messenger.vim'  " popup commit message for cursor (:GitMessenger)
 Plug 'tpope/vim-rhubarb'  " GitHub support for fugitive
-
-" On-demand loading
-Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
 
 " ---------- Python ----------
 Plug 'sheerun/vim-polyglot'
@@ -65,7 +60,6 @@ Plug 'junegunn/limelight.vim'
 
 " Color scheme
 Plug 'lifepillar/vim-gruvbox8'
-Plug 'franbach/miramare'
 
 " LSP
 " Use release branch (recommend)
@@ -74,6 +68,10 @@ Plug 'neoclide/coc-highlight',
 Plug 'neoclide/coc-snippets'
 Plug 'neoclide/coc-prettier', 
 Plug 'neoclide/coc-lists',
+
+Plug 'easymotion/vim-easymotion'
+Plug 'haya14busa/incsearch.vim'
+Plug 'haya14busa/incsearch-easymotion.vim'
 
 call plug#end()
 
@@ -90,9 +88,6 @@ let g:gruvbox_italics = 1
 let g:gruvbox_italicize_strings = 0
 let g:gruvbox_bold = 1
  colorscheme gruvbox8
-let g:miramare_enable_italic = 1
-let g:miramare_disable_italic_comment = 1
-" colorscheme miramare
 let g:rainbow_active = 1
 
 " General Settings
@@ -234,6 +229,40 @@ nmap <Leader>yW ysiW
 nmap <silent> dsf ds)db
 nnoremap <silent> csf [(cb
 
+" ==============
+" PLUGIN: Semshi 
+" ==============
+function MyCustomHighlights()
+  hi semshiLocal           ctermfg=209 guifg=#ff875f
+  hi semshiGlobal          ctermfg=214 guifg=#ffaf00
+  hi semshiImported        ctermfg=214 guifg=#ffaf00 cterm=bold gui=bold
+  hi semshiParameter       ctermfg=75  guifg=#5fafff
+  hi semshiParameterUnused ctermfg=117 guifg=#87d7ff cterm=underline gui=underline
+  hi semshiFree            ctermfg=218 guifg=#ffafd7
+  hi semshiBuiltin         ctermfg=207 guifg=#ff5fff
+  hi semshiAttribute       ctermfg=49  guifg=#00ffaf
+  hi semshiSelf            ctermfg=249 guifg=#b2b2b2
+  hi semshiUnresolved      ctermfg=226 guifg=#ffff00 cterm=underline gui=underline
+  hi semshiSelected        ctermfg=231 guifg=#ffffff ctermbg=161 guibg=#d7005f
+
+  hi semshiErrorSign       ctermfg=231 guifg=#ffffff ctermbg=160 guibg=#d70000
+  hi semshiErrorChar       ctermfg=231 guifg=#ffffff ctermbg=160 guibg=#d70000
+  sign define semshiError text=E> texthl=semshiErrorSign
+endfunction
+autocmd FileType python call MyCustomHighlights()
+
+" ==============
+" PLUGIN: Easymotion 
+" ==============
+map  n <Plug>(easymotion-next)
+map  N <Plug>(easymotion-prev)
+" avoid triggering CoC with the jump labels from easymotion
+autocmd User EasyMotionPromptBegin silent! CocDisable
+autocmd User EasyMotionPromptEnd silent! CocEnable
+let g:incsearch#auto_nohlsearch = 1
+map / <Plug>(incsearch-easymotion-/)
+map ? <Plug>(incsearch-easymotion-?)
+
 " ===========
 " Spellcheck
 " ===========
@@ -242,6 +271,12 @@ augroup markdownSpell
     autocmd FileType markdown setlocal spell
     autocmd BufRead,BufNewFile *.md setlocal spell
 augroup END
+
+" ==============
+" PLUGIN: vim-highlightedyank 
+" ==============
+let g:highlightedyank_highlight_duration = 1000
+highlight HighlightedyankRegion cterm=reverse gui=reverse
 
 " ==============
 " PLUGIN: Sneak 
