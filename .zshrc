@@ -121,9 +121,3 @@ alias gpu='git pull'
 alias unmerged="git branch --no-merged"
 alias plog="git log --oneline --decorate"
 alias black="python -m black"
-
-# Disable scroll-lock to allow use off C-s and C-q in vim
-stty ixany
-stty ixoff -ixon
-stty stop undef
-stty start undefetopt 
