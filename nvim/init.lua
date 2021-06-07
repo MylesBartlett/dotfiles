@@ -123,9 +123,6 @@ require('packer').startup(function(use)
   -- digram-based/cross-line f/t movement
   use {'chaoren/vim-wordmotion', {'justinmk/vim-sneak', config = [[require('config.sneak')]]}}
 
-  -- code formatting for python
-  use {'psf/black', branch = 'stable'}
-
   -- easy window resizing
   use {'simeji/winresizer'}
 
@@ -196,7 +193,6 @@ map('n', '<leader>o', '<cmd>Telescope lsp_dynamic_workspace_symbols<cr>', norema
 map('n', '<leader>f', '<cmd>Telescope live_grep<cr>', noremap)
 -- python-related mappings
 map('n', '<leader>i', '<cmd>PyrightOrganizeImports<cr>', noremap)
-map('n', '<leader>b', '<cmd>Black<cr>', noremap)
 map('n', '<leader>e', 'ofrom IPython import embed; embed()<esc>', noremap)
 -- buffer change
 map('n', '<leader>1', '<Plug>lightline#bufferline#go(1)', {})
@@ -332,7 +328,7 @@ execute [[hi TreesitterContext ctermbg=gray guibg=Gray]]
 ---------------------------
 --      completion       --
 ---------------------------
-opt.completeopt = {'menuone', 'noinsert', 'noselect'}
+opt.completeopt = {'menuone', 'noselect'}
 require'compe'.setup {
   enabled = true;
   autocomplete = true;
@@ -469,7 +465,7 @@ lspconfig.pyright.setup{
     python = {
       analysis = {
         typeCheckingMode = "basic",
-        autoImportCompletions = true,
+        autoImportCompletions = false,
       },
       formatting = {
         provider = "black",
@@ -502,4 +498,47 @@ require("telescope").setup {
    
   },
 }
+}
+
+
+ --- EFM LSP for formatting ---
+
+ -- This will 1. create an autocommand for every buffer to format on save. And then save again after formatting 
+ -- is done (only if there are no changes to the buffer)
+vim.lsp.handlers["textDocument/formatting"] = function(err, _, result, _, bufnr)
+    if err ~= nil or result == nil then
+        return
+    end
+    if not vim.api.nvim_buf_get_option(bufnr, "modified") then
+        local view = vim.fn.winsaveview()
+        vim.lsp.util.apply_text_edits(result, bufnr)
+        vim.fn.winrestview(view)
+        if bufnr == vim.api.nvim_get_current_buf() then
+            vim.api.nvim_command("noautocmd :update")
+        end
+    end
+end
+
+local on_attach = function(client)
+    if client.resolved_capabilities.document_formatting then
+        vim.api.nvim_command [[augroup Format]]
+        vim.api.nvim_command [[autocmd! * <buffer>]]
+        vim.api.nvim_command [[autocmd BufWritePost <buffer> lua vim.lsp.buf.formatting()]]
+        vim.api.nvim_command [[augroup END]]
+    end
+end
+
+lspconfig.efm.setup {
+  init_options = {documentFormatting = true},
+  on_attach = on_attach,
+  filetypes = {'python'},
+  settings = {
+    rootMarkers = {'.git/'},
+    languages = {
+      python = {
+        {formatCommand = 'black -l 100', formatStdin = true},
+        {formatCommand = 'isort --stdout --profile black -l 100', formatStdin = true}
+      }
+    }
+  }
 }
