@@ -17,8 +17,8 @@
   "python.jediEnabled": false,
   "python.jediMemoryLimit": -1,
   "python.linting.enabled": true,
-  "python.linting.pylintEnabled": true,
-  "python.linting.flake8Enabled": true,
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": false,
   "python.linting.flake8Args": ["--max-line-length", "100"],
   "python.formatting.provider": "black",
   "python.formatting.blackArgs": ["--line-length", "100"],
@@ -27,5 +27,7 @@
     "--line-length",
     "100"
   ],
-  "coc.preferences.extensionUpdateCheck": "daily"
+  "coc.preferences.extensionUpdateCheck": "daily",
+  "pyright.organizeimports.provider": "pyright",
+  "python.linting.pydocstyleEnabled": true,
 }
