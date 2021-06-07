@@ -60,8 +60,9 @@ require('packer').startup(function(use)
   use 'nvim-treesitter/nvim-treesitter'
   -- objects for moving
   use 'nvim-treesitter/nvim-treesitter-textobjects'
-  -- show context in code
-  use 'romgrk/nvim-treesitter-context'
+
+  --[[ -- show context in code
+  use 'romgrk/nvim-treesitter-context' ]]
 
   -- colorscheme
   use {"npxbr/gruvbox.nvim", requires = {"rktjmp/lush.nvim"}}
