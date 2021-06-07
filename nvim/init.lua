@@ -42,6 +42,7 @@ require('packer').startup(function(use)
   use {'justinmk/vim-dirvish'}
 
   -- completion
+  use { 'hrsh7th/nvim-compe' }
   use { 'nvim-lua/completion-nvim' }
   use { 'steelsojka/completion-buffers' }  -- word completion from current buffer
 
@@ -94,7 +95,7 @@ require('packer').startup(function(use)
   use 'tpope/vim-repeat'
 
   -- snippets
-  use 'SirVer/ultisnips'  -- snippet engine
+  use 'hrsh7th/vim-vsnip' -- VSCode(LSP)'s snippet feature in vim
   use 'honza/vim-snippets'  -- snippet collection
 
   -- git integration (execute git commands)
@@ -158,7 +159,7 @@ map('v', '>', '>gv', noremap)
 
 -- copy/paste shortcuts
 map('n', 'Y', 'y$', noremap)
-map('n', 'cy', '"+y"', {})
+map('n', 'cy', '"+y"', {noremap=true})
 map('n', 'cp', '"+p"', {noremap=true, silent=true})
 map('n', 'cP', '"+P"', {noremap=true, silent=true})
 
@@ -249,6 +250,7 @@ cmd [[au TextYankPost * lua vim.highlight.on_yank {on_visual = false}]]
 ---------------------------
 opt.showmode = false
 g.lightline = {
+  colorscheme = 'one',
   active = {
     left = {{'mode', 'paste'}, {'readonly', 'relativepath', 'modified'}},
   },
@@ -327,7 +329,7 @@ execute [[hi TreesitterContext ctermbg=gray guibg=Gray]]
 --      completion       --
 ---------------------------
 opt.completeopt = {'menuone', 'noinsert', 'noselect'}
---[[ require'compe'.setup {
+require'compe'.setup {
   enabled = true;
   autocomplete = true;
   debug = false;
@@ -348,63 +350,51 @@ opt.completeopt = {'menuone', 'noinsert', 'noselect'}
     nvim_lsp = true;
     nvim_lua = true;
     vsnip = true;
-    ultisnips = true;
   };
-} ]]
-
-require'lspconfig'.pyls.setup{on_attach=require'completion'.on_attach}
-
--- snippets
-g.completion_enable_snippet = 'UltiSnips'
-g.UltiSnipsExpandTrigger = "<CR>"
-
--- Use <Tab> and <S-Tab> to navigate through completion suggestions
-local function t(str)
-    return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-
-function _G.smart_tab()
-    return vim.fn.pumvisible() == 1 and t'<C-n>' or t'<Tab>'
-end
-
-function _G.smart_tabr()
-    return vim.fn.pumvisible() == 1 and t'<C-p>' or t'<S-Tab>'
-end
-
-vim.api.nvim_set_keymap('i', '<Tab>', 'v:lua.smart_tab()', {expr = true, noremap = true})
-vim.api.nvim_set_keymap('i', '<S-Tab>', 'v:lua.smart_tabr()', {expr = true, noremap = true})
-
--- Trigger completion with <(S-)Tab>
---[[ map('i', '<Tab>', '<Plug>completion_smart_tab', {})
-map('i', '<S-Tab>', '<Plug>completion_smart_s_tab', {}) ]]
-
--- Avoid showing message extra message when using completion
-opt.shortmess:append({ s = true })
-
--- vimtex completion
-local function vimtex_completion(prefix)
-  -- define your total completion items
-  fn['vimtex#complete#omnifunc'](1, '')
-  local items = fn['vimtex#complete#omnifunc'](0, prefix)
-  return items
-end
-require('completion').addCompletionSource('vimtex', { item = vimtex_completion })
-
--- Use completion-nvim in every file buffer
-cmd [[autocmd BufEnter * if &buftype != 'nofile' | lua require('completion').on_attach()]]
-
--- order of completion sources
-g.completion_chain_complete_list = {
-  default = {
-    {complete_items = {'lsp', 'snippet'}}, 
-    {complete_items = {'buffers'}}, 
-  },
-  tex = {
-    -- don't use LSP for latex
-    {complete_items = {'vimtex', 'snippet', 'buffers'}}, 
-  },
 }
-g.completion_auto_change_source = 1
+
+local t = function(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
+local check_back_space = function()
+    local col = vim.fn.col('.') - 1
+    if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
+        return true
+    else
+        return false
+    end
+end
+
+-- Use (s-)tab to:
+--- move to prev/next item in completion menuone
+--- jump to prev/next snippet's placeholder
+_G.tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-n>"
+  elseif vim.fn.call("vsnip#available", {1}) == 1 then
+    return t "<Plug>(vsnip-expand-or-jump)"
+  elseif check_back_space() then
+    return t "<Tab>"
+  else
+    return vim.fn['compe#complete']()
+  end
+end
+_G.s_tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-p>"
+  elseif vim.fn.call("vsnip#jumpable", {-1}) == 1 then
+    return t "<Plug>(vsnip-jump-prev)"
+  else
+    -- If <S-Tab> is not working in your terminal, change it to <C-h>
+    return t "<S-Tab>"
+  end
+end
+
+vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 
 ---------------------------
 --         LSP           --
