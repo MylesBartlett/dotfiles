@@ -159,9 +159,9 @@ map('v', '>', '>gv', noremap)
 
 -- copy/paste shortcuts
 map('n', 'Y', 'y$', noremap)
-map('n', 'cy', '"+y"', {noremap=true})
-map('n', 'cp', '"+p"', {noremap=true, silent=true})
-map('n', 'cP', '"+P"', {noremap=true, silent=true})
+map('n', 'cy', '"+y', {noremap=true})
+map('n', 'cp', '"+p', {noremap=true, silent=true})
+map('n', 'cP', '"+P', {noremap=true, silent=true})
 
 -- global selection
 map('x', 'ie', 'gg0gG$', {noremap=true, silent=true})
