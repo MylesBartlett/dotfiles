@@ -121,7 +121,7 @@ require('packer').startup(function(use)
   use 'lervag/vimtex'
 
   -- digram-based/cross-line f/t movement
-  use {'chaoren/vim-wordmotion', {'justinmk/vim-sneak', config = [[require('config.sneak')]]}}
+  use {'justinmk/vim-sneak', config = [[require('config.sneak')]]}
 
   -- easy window resizing
   use {'simeji/winresizer'}
@@ -226,6 +226,9 @@ opt.signcolumn = 'yes'
 opt.cmdheight = 2
 opt.incsearch = true
 opt.hlsearch = false
+opt.smartindent = true              -- Insert indents automatically
+opt.splitbelow = true               -- Put new windows below current
+opt.splitright = true               -- Put new windows right of current
 opt.inccommand = 'nosplit'
 opt.exrc = true
 opt.secure = true
@@ -465,7 +468,7 @@ lspconfig.pyright.setup{
     python = {
       analysis = {
         typeCheckingMode = "basic",
-        autoImportCompletions = false,
+        autoImportCompletions = true,
       },
       formatting = {
         provider = "black",
@@ -536,8 +539,8 @@ lspconfig.efm.setup {
     rootMarkers = {'.git/'},
     languages = {
       python = {
-        {formatCommand = 'black -l 100', formatStdin = true},
-        {formatCommand = 'isort --stdout --profile black -l 100', formatStdin = true}
+        {formatCommand = 'black -', formatStdin = true},
+        {formatCommand = 'isort --stdout --profile black -', formatStdin = true}
       }
     }
   }
