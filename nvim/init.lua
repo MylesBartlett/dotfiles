@@ -133,6 +133,18 @@ require('packer').startup(function(use)
   use {'RishabhRD/popfix'}
   use {'RishabhRD/nvim-lsputils'}
 
+  -- project management
+  use {
+    "ahmedkhalf/project.nvim",
+    config = function()
+      require("project_nvim").setup {
+        -- your configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
+      }
+    end
+  }
+
 end)
 
 
@@ -325,6 +337,7 @@ ts.setup {
 ---------------------------
 --     colorscheme       --
 ---------------------------
+vim.o.background = "dark"
 cmd [[colorscheme gruvbox]]
 execute [[hi TreesitterContext ctermbg=gray guibg=Gray]]
 
@@ -503,6 +516,10 @@ require("telescope").setup {
 }
 }
 
+---------------------------
+--     project.nvim      --
+---------------------------
+require('telescope').load_extension('projects')
 
  --- EFM LSP for formatting ---
 
