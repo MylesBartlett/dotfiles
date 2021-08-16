@@ -60,6 +60,8 @@ require('packer').startup(function(use)
   use 'nvim-treesitter/nvim-treesitter'
   -- objects for moving
   use 'nvim-treesitter/nvim-treesitter-textobjects'
+  --  shows the context of the currently visible buffer content
+  use 'romgrk/nvim-treesitter-context'
 
   --[[ -- show context in code
   use 'romgrk/nvim-treesitter-context' ]]
@@ -490,6 +492,7 @@ lspconfig.pyright.setup{
   }
 }
 lspconfig.html.setup{on_attach = on_attach}
+
 -- when highlighting other occurances of a variable
 -- don't highlight the variable itself
 g.Illuminate_highlightUnderCursor = 0
