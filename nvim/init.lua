@@ -58,12 +58,14 @@ require('packer').startup(function(use)
 
   -- LSP
   use { 'neovim/nvim-lspconfig' }
-  use { 'RRethy/vim-illuminate' }  -- highlight other occurances of variable under cursor
+  -- highlight other occurances of variable under cursor
+  use { 'RRethy/vim-illuminate' }  
 
   -- Fuzzy finder (i.e., replacement for FZF)
-  use {
-      'nvim-telescope/telescope.nvim',
-      requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}
+  use { 'ibhagwan/fzf-lua',
+    requires = {
+      'vijaymarupudi/nvim-fzf',
+      'kyazdani42/nvim-web-devicons' } -- optional for icons
   }
 
   -- Treesitter - syntax lighting
@@ -74,10 +76,8 @@ require('packer').startup(function(use)
   use 'romgrk/nvim-treesitter-context'
 
   -- colorscheme
-  use {"npxbr/gruvbox.nvim", requires = {"rktjmp/lush.nvim"}}
-
-  -- display a counter for search matches
-  use { 'thomkeh/vim-matchcounter', branch = 'main' }
+  -- use {"npxbr/gruvbox.nvim", requires = {"rktjmp/lush.nvim"}}
+  use 'folke/tokyonight.nvim'
 
   -- show content of registers
   use "tversteeg/registers.nvim"
@@ -130,7 +130,7 @@ require('packer').startup(function(use)
   use 'lervag/vimtex'
 
   -- digram-based/cross-line f/t movement
-  use {'justinmk/vim-sneak', config = [[require('config.sneak')]]}
+  use 'ggandor/lightspeed.nvim'
 
   -- easy window resizing
   use {'simeji/winresizer'}
@@ -142,17 +142,8 @@ require('packer').startup(function(use)
   use {'RishabhRD/popfix'}
   use {'RishabhRD/nvim-lsputils'}
 
-  -- project management
-  use {
-    "ahmedkhalf/project.nvim",
-    config = function()
-      require("project_nvim").setup {
-        -- your configuration comes here
-        -- or leave it empty to use the default settings
-        -- refer to the configuration section below
-      }
-    end
-  }
+  -- Text objects
+  use 'wellle/targets.vim'
 
 end)
 
@@ -165,7 +156,8 @@ end)
 --- https://github.com/neovim/neovim/pull/13823)
 -- general mappings
 map('n', '<leader>w', '<cmd>cclose<cr>', noremap)
-map('n', '<leader>q', '<cmd>qa<cr>', noremap)
+-- map('n', '<leader>q', '<cmd>qa<cr>', noremap)
+map('n', '<leader>;', 'q:', noremap)
 map('n', '<leader><space>', '<cmd>nohlsearch<cr>', noremap)
 map('n', '<leader>s', '<cmd>update<cr>', noremap)
 map('n', '<leader><leader>', 'zz', noremap)
@@ -196,22 +188,322 @@ map('n', '<C-j>', '<C-\\><C-n><C-w>j', noremap)
 map('n', '<C-k>', '<C-\\><C-n><C-w>k', noremap)
 map('n', '<C-l>', '<C-\\><C-n><C-w>l', noremap)
 -- In terminal mode
-map('t', '<C-h>', '<C-\\><C-n><C-w>h', noremap)
+--[[ map('t', '<C-h>', '<C-\\><C-n><C-w>h', noremap)
 map('t', '<C-j>', '<C-\\><C-n><C-w>j', noremap)
 map('t', '<C-k>', '<C-\\><C-n><C-w>k', noremap)
 map('t', '<C-l>', '<C-\\><C-n><C-w>l', noremap)
-map('t', '<C-w>', '<C-\\><C-n>', noremap)
+map('t', '<C-w>', '<C-\\><C-n>', noremap) ]]
 
--- sneak settings
-map('', 'f', '<Plug>Sneak_f', {})
-map('', 'F', '<Plug>Sneak_F', {})
-map('', 't', '<Plug>Sneak_t', {})
-map('', 'T', '<Plug>Sneak_T', {})
+-- lightspeed settings
+require'lightspeed'.setup {
+  jump_to_first_match = true,
+  jump_on_partial_input_safety_timeout = 400,
+  -- This can get _really_ slow if the window has a lot of content,
+  -- turn it on only if your machine can always cope with it.
+  highlight_unique_chars = false,
+  grey_out_search_area = true,
+  match_only_the_start_of_same_char_seqs = true,
+  limit_ft_matches = 5,
+  x_mode_prefix_key = '<c-x>',
+  substitute_chars = { ['\r'] = '¬' },
+  instant_repeat_fwd_key = nil,
+  instant_repeat_bwd_key = nil,
+  -- If no values are given, these will be set at runtime,
+  -- based on `jump_to_first_match`.
+  labels = nil,
+  cycle_group_fwd_key = nil,
+  cycle_group_bwd_key = nil,
+}
 
--- telescope mappings
-map('n', '<C-p>', '<cmd>Telescope find_files find_command=fd,--type,f,--hidden,--follow,--exclude,.git<cr>', noremap)
-map('n', '<leader>o', '<cmd>Telescope lsp_dynamic_workspace_symbols<cr>', noremap)
-map('n', '<leader>f', '<cmd>Telescope live_grep<cr>', noremap)
+-- fzf-lua
+map('n', '<C-p>', "<cmd>lua require('fzf-lua').files()<CR>", { noremap = true, silent = true })
+map('n', '<leader>f', "<cmd>lua require('fzf-lua').live_grep()<CR>", { noremap = true, silent = true })
+map('n', '<leader><C-f>', "<cmd>lua require('fzf-lua').live_grep_resume()<CR>", { noremap = true, silent = true })
+map('n', '<leader>\\', "<cmd>lua require('fzf-lua').quickfix()<CR>", { noremap = true, silent = true })
+map('n', '<leader>a', "<cmd>lua require('fzf-lua').code_actions()<CR>", { noremap = true, silent = true })
+map('n', '<leader>/', "<cmd>lua require('fzf-lua').lines()<CR>", { noremap = true, silent = true })
+-- LSP integration
+map('n', '<leader>o', "<cmd>lua require('fzf-lua').lsp_document_symbols()<CR>", { noremap = true, silent = true })
+map('n', '<leader>w', "<cmd>lua require('fzf-lua').lsp_live_workspace_symbols()<CR>", { noremap = true, silent = true })
+map('n', '<leader>[', "<cmd>lua require('fzf-lua').lsp_document_diagnostics()<CR>", { noremap = true, silent = true })
+map('n', '<leader>]', "<cmd>lua require('fzf-lua').lsp_workspace_diagnostics()<CR>", { noremap = true, silent = true })
+
+local actions = require "fzf-lua.actions"
+require'fzf-lua'.setup {
+  winopts = {
+    -- split         = "belowright new",-- open in a split instead?
+                                        -- "belowright new"  : split below
+                                        -- "aboveleft new"   : split above
+                                        -- "belowright vnew" : split right
+                                        -- "aboveleft vnew   : split left
+    win_height       = 0.85,            -- window height
+    win_width        = 0.80,            -- window width
+    win_row          = 0.30,            -- window row position (0=top, 1=bottom)
+    win_col          = 0.50,            -- window col position (0=left, 1=right)
+    -- win_border    = false,           -- window border? or borderchars?
+    win_border       = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
+    hl_normal        = 'Normal',        -- window normal color
+    hl_border        = 'FloatBorder',   -- window border color
+  },
+  -- fzf_bin             = 'sk',        -- use skim instead of fzf?
+  fzf_opts = {
+    -- options are sent as `<left>=<right>`
+    -- set to `false` to remove a flag
+    -- set to '' for a non-value flag
+    -- for raw args use `fzf_args` instead
+    ['--ansi']        = '',
+    ['--prompt']      = ' >',
+    ['--info']        = 'inline',
+    ['--height']      = '100%',
+    ['--layout']      = 'reverse',
+  },
+  fzf_binds           = {               -- fzf '--bind=' options
+    ["f2"]            = "toggle-preview",
+    ["f3"]            = "toggle-preview-wrap",
+    ["shift-down"]    = "preview-page-down",
+    ["shift-up"]      = "preview-page-up",
+    ["ctrl-l"]        = "unix-line-discard",
+    ["ctrl-d"]        = "half-page-down",
+    ["ctrl-u"]        = "half-page-up",
+    ["0"]        = "beginning-of-line",
+    ["$"]        = "end-of-line",
+    ["ctrl-a"]         = "toggle-all",
+  },
+  --[[ fzf_colors = {                   -- fzf '--color=' options
+      ["fg"] = { "fg", "CursorLine" },
+      ["bg"] = { "bg", "Normal" },
+      ["hl"] = { "fg", "Comment" },
+      ["fg+"] = { "fg", "Normal" },
+      ["bg+"] = { "bg", "CursorLine" },
+      ["hl+"] = { "fg", "Statement" },
+      ["info"] = { "fg", "PreProc" },
+      ["prompt"] = { "fg", "Conditional" },
+      ["pointer"] = { "fg", "Exception" },
+      ["marker"] = { "fg", "Keyword" },
+      ["spinner"] = { "fg", "Label" },
+      ["header"] = { "fg", "Comment" },
+      ["gutter"] = { "bg", "Normal" },
+  }, ]]
+  preview_border      = 'border',       -- border|noborder
+  preview_wrap        = 'nowrap',       -- wrap|nowrap
+  preview_opts        = 'nohidden',     -- hidden|nohidden
+  preview_vertical    = 'down:45%',     -- up|down:size
+  preview_horizontal  = 'right:60%',    -- right|left:size
+  preview_layout      = 'flex',         -- horizontal|vertical|flex
+  flip_columns        = 120,            -- #cols to switch to horizontal on flex
+  -- default_previewer   = "bat",       -- override the default previewer?
+                                        -- by default uses the builtin previewer
+  previewers = {
+    cat = {
+      cmd             = "cat",
+      args            = "--number",
+    },
+    bat = {
+      cmd             = "bat",
+      args            = "--style=numbers,changes --color always",
+      theme           = 'Coldark-Dark', -- bat preview theme (bat --list-themes)
+      config          = nil,            -- nil uses $BAT_CONFIG_PATH
+    },
+    head = {
+      cmd             = "head",
+      args            = nil,
+    },
+    git_diff = {
+      cmd             = "git diff",
+      args            = "--color",
+    },
+    builtin = {
+      title           = true,         -- preview title?
+      scrollbar       = true,         -- scrollbar?
+      scrollchar      = '█',          -- scrollbar character
+      wrap            = false,        -- wrap lines?
+      syntax          = true,         -- preview syntax highlight?
+      syntax_limit_l  = 0,            -- syntax limit (lines), 0=nolimit
+      syntax_limit_b  = 1024*1024,    -- syntax limit (bytes), 0=nolimit
+      expand          = false,        -- preview max size?
+      hl_cursor       = 'Cursor',     -- cursor highlight
+      hl_cursorline   = 'CursorLine', -- cursor line highlight
+      hl_range        = 'IncSearch',  -- ranger highlight (not yet in use)
+      keymap = {
+        toggle_full   = '<F2>',       -- toggle full screen
+        toggle_wrap   = '<F3>',       -- toggle line wrap
+        toggle_hide   = '<F4>',       -- toggle on/off (not yet in use)
+        page_up       = '<S-up>',     -- preview scroll up
+        page_down     = '<S-down>',   -- preview scroll down
+        page_reset    = '<S-left>',      -- reset scroll to orig pos
+      },
+    },
+  },
+  -- provider setup
+  files = {
+    -- previewer         = "cat",       -- uncomment to override previewer
+    prompt            = 'Files❯ ',
+    cmd               = '',             -- "find . -type f -printf '%P\n'",
+    git_icons         = true,           -- show git icons?
+    file_icons        = true,           -- show file icons?
+    color_icons       = true,           -- colorize file|git icons
+    actions = {
+      -- set bind to 'false' to disable
+      ["default"]     = actions.file_edit,
+      ["ctrl-s"]      = actions.file_split,
+      ["ctrl-v"]      = actions.file_vsplit,
+      ["ctrl-t"]      = actions.file_tabedit,
+      ["ctrl-q"]       = actions.file_sel_to_qf,
+      -- custom actions are available too
+      ["ctrl-y"]      = function(selected) print(selected[2]) end,
+    }
+  },
+  git = {
+    files = {
+      prompt          = 'GitFiles❯ ',
+      cmd             = 'git ls-files --exclude-standard',
+      git_icons       = true,           -- show git icons?
+      file_icons      = true,           -- show file icons?
+      color_icons     = true,           -- colorize file|git icons
+    },
+    status = {
+      prompt        = 'GitStatus❯ ',
+      cmd           = "git status -s",
+      previewer     = "git_diff",
+      file_icons    = true,
+      git_icons     = true,
+      color_icons   = true,
+    },
+    commits = {
+      prompt          = 'Commits❯ ',
+      cmd             = "git log --pretty=oneline --abbrev-commit --color --reflog",
+      preview         = "git show --pretty='%Cred%H%n%Cblue%an%n%Cgreen%s' --color {1}",
+      actions = {
+        ["default"] = actions.git_checkout,
+      },
+    },
+    bcommits = {
+      prompt          = 'BCommits❯ ',
+      cmd             = "git log --pretty=oneline --abbrev-commit --color --reflog",
+      preview         = "git show --pretty='%Cred%H%n%Cblue%an%n%Cgreen%s' --color {1}",
+      actions = {
+        ["default"] = actions.git_buf_edit,
+        ["ctrl-s"]  = actions.git_buf_split,
+        ["ctrl-v"]  = actions.git_buf_vsplit,
+        ["ctrl-t"]  = actions.git_buf_tabedit,
+      },
+    },
+    branches = {
+      prompt          = 'Branches❯ ',
+      cmd             = "git branch --all --color",
+      preview         = "git log --graph --pretty=oneline --abbrev-commit --color {1}",
+      actions = {
+        ["default"] = actions.git_switch,
+      },
+    },
+    icons = {
+      ["M"]           = { icon = "M", color = "yellow" },
+      ["D"]           = { icon = "D", color = "red" },
+      ["A"]           = { icon = "A", color = "green" },
+      ["?"]           = { icon = "?", color = "magenta" },
+      -- ["M"]          = { icon = "★", color = "red" },
+      -- ["D"]          = { icon = "✗", color = "red" },
+      -- ["A"]          = { icon = "+", color = "green" },
+    },
+  },
+  grep = {
+    prompt            = 'Rg❯ ',
+    input_prompt      = 'Grep For❯ ',
+    -- cmd               = "rg --vimgrep",
+    rg_opts           = "--hidden --column --line-number --no-heading " ..
+                        "--color=always --smart-case -g '!{.git,node_modules}/*'",
+    git_icons         = true,           -- show git icons?
+    file_icons        = true,           -- show file icons?
+    color_icons       = true,           -- colorize file|git icons
+  },
+  oldfiles = {
+    prompt            = 'History❯ ',
+    cwd_only          = false,
+  },
+  buffers = {
+    -- previewer      = false,        -- disable the builtin previewer?
+    prompt            = 'Buffers❯ ',
+    file_icons        = true,         -- show file icons?
+    color_icons       = true,         -- colorize file|git icons
+    sort_lastused     = true,         -- sort buffers() by last used
+    actions = {
+      ["default"]     = actions.buf_edit,
+      ["ctrl-s"]      = actions.buf_split,
+      ["ctrl-v"]      = actions.buf_vsplit,
+      ["ctrl-t"]      = actions.buf_tabedit,
+      ["ctrl-x"]      = actions.buf_del,
+    }
+  },
+  blines = {
+    previewer         = "builtin",    -- set to 'false' to disable
+    prompt            = 'BLines❯ ',
+    actions = {
+      ["default"]     = actions.buf_edit,
+      ["ctrl-s"]      = actions.buf_split,
+      ["ctrl-v"]      = actions.buf_vsplit,
+      ["ctrl-t"]      = actions.buf_tabedit,
+    }
+  },
+  colorschemes = {
+    prompt            = 'Colorschemes❯ ',
+    live_preview      = true,       -- apply the colorscheme on preview?
+    actions = {
+      ["default"]     = actions.colorscheme,
+      ["ctrl-y"]      = function(selected) print(selected[2]) end,
+    },
+    winopts = {
+      win_height        = 0.55,
+      win_width         = 0.30,
+    },
+    post_reset_cb     = function()
+      -- reset statusline highlights after
+      -- a live_preview of the colorscheme
+      -- require('feline').reset_highlights()
+    end,
+  },
+  quickfix = {
+    -- cwd               = vim.loop.cwd(),
+    file_icons        = true,
+    git_icons         = true,
+  },
+  lsp = {
+    prompt            = '❯ ',
+    -- cwd               = vim.loop.cwd(),
+    cwd_only          = false,      -- LSP/diagnostics for cwd only?
+    async_or_timeout  = true,       -- timeout(ms) or false for blocking calls
+    file_icons        = true,
+    git_icons         = false,
+    lsp_icons         = true,
+    severity          = "hint",
+    icons = {
+      ["Error"]       = { icon = "", color = "red" },       -- error
+      ["Warning"]     = { icon = "", color = "yellow" },    -- warning
+      ["Information"] = { icon = "", color = "blue" },      -- info
+      ["Hint"]        = { icon = "", color = "magenta" },   -- hint
+    },
+  },
+  -- uncomment to disable the previewer
+  -- nvim = { marks    = { previewer = { _ctor = false } } },
+  -- helptags = { previewer = { _ctor = false } },
+  -- manpages = { previewer = { _ctor = false } },
+  -- uncomment to set dummy win location (help|man bar)
+  -- "topleft"  : up
+  -- "botright" : down
+  -- helptags = { previewer = { split = "topleft" } },
+  -- manpages = { previewer = { split = "topleft" } },
+  -- uncomment to use `man` command as native fzf previewer
+  -- manpages = { previewer = { _ctor = require'fzf-lua.previewer'.fzf.man_pages } },
+  -- optional override of file extension icon colors
+  -- available colors (terminal):
+  --    clear, bold, black, red, green, yellow
+  --    blue, magenta, cyan, grey, dark_grey, white
+  -- padding can help kitty term users with
+  -- double-width icon rendering
+  file_icon_padding = '',
+  file_icon_colors = {
+    ["lua"]   = "blue",
+  },
+}
 -- python-related mappings
 map('n', '<leader>i', '<cmd>PyrightOrganizeImports<cr>', noremap)
 map('n', '<leader>e', 'ofrom IPython import embed; embed()<esc>', noremap)
@@ -274,7 +566,7 @@ cmd [[au TextYankPost * lua vim.highlight.on_yank {on_visual = false}]]
 ---------------------------
 opt.showmode = false
 g.lightline = {
-  colorscheme = 'one',
+  colorscheme = 'tokyonight',
   active = {
     left = {{'mode', 'paste'}, {'readonly', 'relativepath', 'modified'}},
   },
@@ -333,9 +625,6 @@ ts.setup {
         -- Or you can define your own textobjects like this
         --[[ ["iF"] = {
           python = "(function_definition) @function",
-          cpp = "(function_definition) @function",
-          c = "(function_definition) @function",
-          java = "(method_declaration) @function",
         }, ]]
       },
     },
@@ -346,14 +635,20 @@ ts.setup {
 ---------------------------
 --     colorscheme       --
 ---------------------------
-vim.o.background = "dark"
-cmd [[colorscheme gruvbox]]
+-- Example config in Lua
+g.tokyonight_style = "storm"
+g.tokyonight_italic_functions = false
+g.tokyonight_sidebars = { "qf", "vista_kind", "terminal", "packer" }
+-- Change the "hint" color to the "orange" color, and make the "error" color bright red
+g.tokyonight_colors = { hint = "orange", error = "#ff0000" }
+-- Load the colorscheme
+vim.cmd[[colorscheme tokyonight]]
+
 execute [[hi TreesitterContext ctermbg=gray guibg=Gray]]
 
 ---------------------------
 --         LSP           --
 ---------------------------
--- Your custom attach function for nvim-lspconfig goes here.
 local on_attach = function(client, bufnr)
   require('completion').on_attach()
 
@@ -370,14 +665,14 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
   buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  buf_set_keymap('n', '<leader>k', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<leader>o', '<cmd>lua vim.lsp.buf.document_symbol()<CR>', opts)
-  buf_set_keymap('n', '<leader>w', '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>', opts)
+  --[[ buf_set_keymap('n', '<leader>o', '<cmd>lua vim.lsp.buf.document_symbol()<CR>', opts)
+  buf_set_keymap('n', '<leader>w', '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>', opts) ]]
   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<leader>d', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+  -- buf_set_keymap('n', '<leader>d', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
 
  vim.api.nvim_command[[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()]]
 -- nvim-lsputils-
@@ -389,24 +684,6 @@ vim.lsp.handlers['textDocument/typeDefinition'] = require'lsputil.locations'.typ
 vim.lsp.handlers['textDocument/implementation'] = require'lsputil.locations'.implementation_handler
 vim.lsp.handlers['textDocument/documentSymbol'] = require'lsputil.symbols'.document_handler
 vim.lsp.handlers['workspace/symbol'] = require'lsputil.symbols'.workspace_handler
-
-  --[[ if client.resolved_capabilities.document_formatting then
-    buf_set_keymap("n", "<leader>b", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-  end ]]
-
-  -- Set autocommands conditional on server_capabilities
-  --[[ if client.resolved_capabilities.document_highlight then
-    vim.api.nvim_exec([[
-      hi LspReferenceRead cterm=bold ctermbg=red guibg=LightYellow
-      hi LspReferenceText cterm=bold ctermbg=red guibg=LightYellow
-      hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightYellow
-      augroup lsp_document_highlight
-        autocmd! * <buffer>
-        autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-        autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-      augroup END
-    ] ], false)
-  end ]]
 
   -- hook in plugins depending on LSP
   require('illuminate').on_attach(client)
@@ -434,33 +711,6 @@ lspconfig.pyright.setup{
 -- when highlighting other occurances of a variable
 -- don't highlight the variable itself
 g.Illuminate_highlightUnderCursor = 0
-
----------------------------
---      telescope        --
----------------------------
-local actions = require('telescope.actions')
-require("telescope").setup {
-  defaults = {
-    mappings = {
-      i = {
-        ["<C-k>"] = actions.toggle_selection + actions.move_selection_previous,
-        ["<C-j>"] = actions.toggle_selection + actions.move_selection_next,
-        ["<C-w>"] = actions.send_selected_to_qflist + actions.open_qflist,
-      },
-      n = {
-        ["<C-k>"] = actions.toggle_selection + actions.move_selection_previous,
-        ["<C-j>"] = actions.toggle_selection + actions.move_selection_next,
-        ["<C-w>"] = actions.send_selected_to_qflist + actions.open_qflist,
-      }
-   
-  },
-}
-}
-
----------------------------
---     project.nvim      --
----------------------------
-require('telescope').load_extension('projects')
 
  --- EFM LSP for formatting ---
 
