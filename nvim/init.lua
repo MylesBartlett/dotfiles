@@ -156,7 +156,7 @@ end)
 --- https://github.com/neovim/neovim/pull/13823)
 -- general mappings
 map('n', '<leader>w', '<cmd>cclose<cr>', noremap)
--- map('n', '<leader>q', '<cmd>qa<cr>', noremap)
+map('n', '<leader>q', '<cmd>qa<cr>', noremap)
 map('n', '<leader>;', 'q:', noremap)
 map('n', '<leader><space>', '<cmd>nohlsearch<cr>', noremap)
 map('n', '<leader>s', '<cmd>update<cr>', noremap)
@@ -642,7 +642,7 @@ g.tokyonight_sidebars = { "qf", "vista_kind", "terminal", "packer" }
 -- Change the "hint" color to the "orange" color, and make the "error" color bright red
 g.tokyonight_colors = { hint = "orange", error = "#ff0000" }
 -- Load the colorscheme
-vim.cmd[[colorscheme tokyonight]]
+cmd[[colorscheme tokyonight]]
 
 execute [[hi TreesitterContext ctermbg=gray guibg=Gray]]
 
@@ -667,12 +667,9 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   buf_set_keymap('n', '<leader>k', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  --[[ buf_set_keymap('n', '<leader>o', '<cmd>lua vim.lsp.buf.document_symbol()<CR>', opts)
-  buf_set_keymap('n', '<leader>w', '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>', opts) ]]
   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  -- buf_set_keymap('n', '<leader>d', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
 
  vim.api.nvim_command[[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()]]
 -- nvim-lsputils-
