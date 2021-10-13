@@ -77,7 +77,6 @@ require("packer").startup(function(use)
 
 	-- colorscheme
 	use({ "npxbr/gruvbox.nvim", requires = { "rktjmp/lush.nvim" } })
-	-- use 'folke/tokyonight.nvim'
 
 	-- show content of registers
 	use("tversteeg/registers.nvim")
@@ -186,11 +185,6 @@ map("n", "<C-j>", "<C-\\><C-n><C-w>j", noremap)
 map("n", "<C-k>", "<C-\\><C-n><C-w>k", noremap)
 map("n", "<C-l>", "<C-\\><C-n><C-w>l", noremap)
 -- In terminal mode
---[[ map('t', '<C-h>', '<C-\\><C-n><C-w>h', noremap)
-map('t', '<C-j>', '<C-\\><C-n><C-w>j', noremap)
-map('t', '<C-k>', '<C-\\><C-n><C-w>k', noremap)
-map('t', '<C-l>', '<C-\\><C-n><C-w>l', noremap)
-map('t', '<C-w>', '<C-\\><C-n>', noremap) ]]
 
 -- lightspeed settings
 require("lightspeed").setup({
@@ -246,45 +240,35 @@ require("fzf-lua").setup({
 		hl_normal = "Normal", -- window normal color
 		hl_border = "FloatBorder", -- window border color
 	},
-	-- fzf_bin             = 'sk',        -- use skim instead of fzf?
+	keymap = { -- fzf '--bind=' options
+	    builtin = {
+	      -- neovim `:tmap` mappings for the fzf win
+	      ["<F2>"]        = "toggle-fullscreen",
+	      -- Only valid with the 'builtin' previewer
+	      ["<F3>"]        = "toggle-preview-wrap",
+	      ["<F4>"]        = "toggle-preview",
+	      -- Rotate preview clockwise/counter-clockwise
+	      ["<F5>"]        = "toggle-preview-ccw",
+	      ["<F6>"]        = "toggle-preview-cw",
+	      ["<S-down>"]    = "preview-page-down",
+	      ["<S-up>"]      = "preview-page-up",
+	      ["<S-left>"]    = "preview-page-reset",
+	    },
+	},
+	-- use skim instead of fzf?
+	-- https://github.com/lotabout/skim
+	-- fzf_bin          = 'sk',
 	fzf_opts = {
-		-- options are sent as `<left>=<right>`
-		-- set to `false` to remove a flag
-		-- set to '' for a non-value flag
-		-- for raw args use `fzf_args` instead
-		["--ansi"] = "",
-		["--prompt"] = " >",
-		["--info"] = "inline",
-		["--height"] = "100%",
-		["--layout"] = "reverse",
+	  -- options are sent as `<left>=<right>`
+	  -- set to `false` to remove a flag
+	  -- set to '' for a non-value flag
+	  -- for raw args use `fzf_args` instead
+	  ['--ansi']        = '',
+	  ['--prompt']      = ' >',
+	  ['--info']        = 'inline',
+	  ['--height']      = '100%',
+	  ['--layout']      = 'reverse',
 	},
-	fzf_binds = { -- fzf '--bind=' options
-		["f2"] = "toggle-preview",
-		["f3"] = "toggle-preview-wrap",
-		["shift-down"] = "preview-page-down",
-		["shift-up"] = "preview-page-up",
-		["ctrl-l"] = "unix-line-discard",
-		["ctrl-d"] = "half-page-down",
-		["ctrl-u"] = "half-page-up",
-		["0"] = "beginning-of-line",
-		["$"] = "end-of-line",
-		["ctrl-a"] = "toggle-all",
-	},
-	--[[ fzf_colors = {                   -- fzf '--color=' options
-      ["fg"] = { "fg", "CursorLine" },
-      ["bg"] = { "bg", "Normal" },
-      ["hl"] = { "fg", "Comment" },
-      ["fg+"] = { "fg", "Normal" },
-      ["bg+"] = { "bg", "CursorLine" },
-      ["hl+"] = { "fg", "Statement" },
-      ["info"] = { "fg", "PreProc" },
-      ["prompt"] = { "fg", "Conditional" },
-      ["pointer"] = { "fg", "Exception" },
-      ["marker"] = { "fg", "Keyword" },
-      ["spinner"] = { "fg", "Label" },
-      ["header"] = { "fg", "Comment" },
-      ["gutter"] = { "bg", "Normal" },
-  }, ]]
 	preview_border = "border", -- border|noborder
 	preview_wrap = "nowrap", -- wrap|nowrap
 	preview_opts = "nohidden", -- hidden|nohidden
@@ -312,27 +296,6 @@ require("fzf-lua").setup({
 		git_diff = {
 			cmd = "git diff",
 			args = "--color",
-		},
-		builtin = {
-			title = true, -- preview title?
-			scrollbar = true, -- scrollbar?
-			scrollchar = "█", -- scrollbar character
-			wrap = false, -- wrap lines?
-			syntax = true, -- preview syntax highlight?
-			syntax_limit_l = 0, -- syntax limit (lines), 0=nolimit
-			syntax_limit_b = 1024 * 1024, -- syntax limit (bytes), 0=nolimit
-			expand = false, -- preview max size?
-			hl_cursor = "Cursor", -- cursor highlight
-			hl_cursorline = "CursorLine", -- cursor line highlight
-			hl_range = "IncSearch", -- ranger highlight (not yet in use)
-			keymap = {
-				toggle_full = "<F2>", -- toggle full screen
-				toggle_wrap = "<F3>", -- toggle line wrap
-				toggle_hide = "<F4>", -- toggle on/off (not yet in use)
-				page_up = "<S-up>", -- preview scroll up
-				page_down = "<S-down>", -- preview scroll down
-				page_reset = "<S-left>", -- reset scroll to orig pos
-			},
 		},
 	},
 	-- provider setup
@@ -487,23 +450,6 @@ require("fzf-lua").setup({
 			["Hint"] = { icon = "", color = "magenta" }, -- hint
 		},
 	},
-	-- uncomment to disable the previewer
-	-- nvim = { marks    = { previewer = { _ctor = false } } },
-	-- helptags = { previewer = { _ctor = false } },
-	-- manpages = { previewer = { _ctor = false } },
-	-- uncomment to set dummy win location (help|man bar)
-	-- "topleft"  : up
-	-- "botright" : down
-	-- helptags = { previewer = { split = "topleft" } },
-	-- manpages = { previewer = { split = "topleft" } },
-	-- uncomment to use `man` command as native fzf previewer
-	-- manpages = { previewer = { _ctor = require'fzf-lua.previewer'.fzf.man_pages } },
-	-- optional override of file extension icon colors
-	-- available colors (terminal):
-	--    clear, bold, black, red, green, yellow
-	--    blue, magenta, cyan, grey, dark_grey, white
-	-- padding can help kitty term users with
-	-- double-width icon rendering
 	file_icon_padding = "",
 	file_icon_colors = {
 		["lua"] = "blue",
@@ -634,12 +580,6 @@ ts.setup({
 ---------------------------
 --     colorscheme       --
 ---------------------------
---[[ g.tokyonight_style = "storm"
-g.tokyonight_italic_functions = false
-g.tokyonight_sidebars = { "qf", "vista_kind", "terminal", "packer" }
--- Change the "hint" color to the "orange" color, and make the "error" color bright red
-g.tokyonight_colors = { hint = "orange", error = "#ff0000" } ]]
--- Load the colorscheme
 vim.o.background = "dark"
 cmd([[colorscheme gruvbox]])
 
