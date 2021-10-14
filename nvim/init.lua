@@ -184,7 +184,6 @@ map("n", "<C-h>", "<C-\\><C-n><C-w>h", noremap)
 map("n", "<C-j>", "<C-\\><C-n><C-w>j", noremap)
 map("n", "<C-k>", "<C-\\><C-n><C-w>k", noremap)
 map("n", "<C-l>", "<C-\\><C-n><C-w>l", noremap)
--- In terminal mode
 
 -- lightspeed settings
 require("lightspeed").setup({
@@ -241,33 +240,33 @@ require("fzf-lua").setup({
 		hl_border = "FloatBorder", -- window border color
 	},
 	keymap = { -- fzf '--bind=' options
-	    builtin = {
-	      -- neovim `:tmap` mappings for the fzf win
-	      ["<F2>"]        = "toggle-fullscreen",
-	      -- Only valid with the 'builtin' previewer
-	      ["<F3>"]        = "toggle-preview-wrap",
-	      ["<F4>"]        = "toggle-preview",
-	      -- Rotate preview clockwise/counter-clockwise
-	      ["<F5>"]        = "toggle-preview-ccw",
-	      ["<F6>"]        = "toggle-preview-cw",
-	      ["<S-down>"]    = "preview-page-down",
-	      ["<S-up>"]      = "preview-page-up",
-	      ["<S-left>"]    = "preview-page-reset",
-	    },
+		builtin = {
+			-- neovim `:tmap` mappings for the fzf win
+			["<F2>"] = "toggle-fullscreen",
+			-- Only valid with the 'builtin' previewer
+			["<F3>"] = "toggle-preview-wrap",
+			["<F4>"] = "toggle-preview",
+			-- Rotate preview clockwise/counter-clockwise
+			["<F5>"] = "toggle-preview-ccw",
+			["<F6>"] = "toggle-preview-cw",
+			["<S-down>"] = "preview-page-down",
+			["<S-up>"] = "preview-page-up",
+			["<S-left>"] = "preview-page-reset",
+		},
 	},
 	-- use skim instead of fzf?
 	-- https://github.com/lotabout/skim
 	-- fzf_bin          = 'sk',
 	fzf_opts = {
-	  -- options are sent as `<left>=<right>`
-	  -- set to `false` to remove a flag
-	  -- set to '' for a non-value flag
-	  -- for raw args use `fzf_args` instead
-	  ['--ansi']        = '',
-	  ['--prompt']      = ' >',
-	  ['--info']        = 'inline',
-	  ['--height']      = '100%',
-	  ['--layout']      = 'reverse',
+		-- options are sent as `<left>=<right>`
+		-- set to `false` to remove a flag
+		-- set to '' for a non-value flag
+		-- for raw args use `fzf_args` instead
+		["--ansi"] = "",
+		["--prompt"] = " >",
+		["--info"] = "inline",
+		["--height"] = "100%",
+		["--layout"] = "reverse",
 	},
 	preview_border = "border", -- border|noborder
 	preview_wrap = "nowrap", -- wrap|nowrap
@@ -455,9 +454,6 @@ require("fzf-lua").setup({
 		["lua"] = "blue",
 	},
 })
--- python-related mappings
-map("n", "<leader>i", "<cmd>PyrightOrganizeImports<cr>", noremap)
-map("n", "<leader>e", "ofrom IPython import embed; embed()<esc>", noremap)
 -- buffer change
 map("n", "<leader>1", "<Plug>lightline#bufferline#go(1)", {})
 map("n", "<leader>2", "<Plug>lightline#bufferline#go(2)", {})
@@ -632,7 +628,6 @@ end
 local lspconfig = require("lspconfig")
 local coq = require("coq")
 
-lspconfig.html.setup(coq.lsp_ensure_capabilities({ on_attach = on_attach }))
 lspconfig.pyright.setup({
 	on_attach = on_attach,
 	settings = {
@@ -640,9 +635,6 @@ lspconfig.pyright.setup({
 			analysis = {
 				typeCheckingMode = "basic",
 				autoImportCompletions = true,
-			},
-			formatting = {
-				provider = "black",
 			},
 		},
 	},
@@ -670,7 +662,6 @@ lspconfig.rust_analyzer.setup({
 g.Illuminate_highlightUnderCursor = 0
 
 --- EFM LSP for formatting ---
-
 local on_attach = function(client)
 	if client.resolved_capabilities.document_formatting then
 		vim.api.nvim_command([[augroup Format]])
@@ -681,18 +672,7 @@ local on_attach = function(client)
 end
 
 lspconfig.efm.setup({
-	init_options = { documentFormatting = true, codeAction = true },
+	init_options = { documentFormatting = true },
 	on_attach = on_attach,
-	filetypes = { "python", "lua", "yaml" },
-	settings = {
-		rootMarkers = { ".git/" },
-		languages = {
-			python = {
-				{ formatCommand = "black -", formatStdin = true },
-				{ formatCommand = "isort --stdout --profile black -", formatStdin = true },
-				{ lintCommand = "darglint --docstring-style sphinx -v 2 -z long -" },
-			},
-			lua = { formatCommand = "stylua -", formatStdin = true },
-		},
-	},
+	filetypes = { "python", "yaml" },
 })
