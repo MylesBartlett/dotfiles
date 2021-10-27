@@ -111,6 +111,7 @@ unset __conda_setup
 alias ca='conda activate'
 alias cde='conda deactivate'
 alias cc='conda create'
+alias matd='maturin develop'
 alias gst='git status'
 alias gco='git commit'
 alias gch='git checkout'
@@ -118,6 +119,8 @@ alias gsw='git switch'
 alias gfe='git fetch'
 alias gbr='git branch'
 alias gpu='git pull'
+alias gre='git reset'
 alias unmerged="git branch --no-merged"
 alias plog="git log --oneline --decorate"
-alias black="python -m black"
+alias blk="python -m black"
+alias isort="python isort"

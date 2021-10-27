@@ -134,6 +134,16 @@
                                     "key_code": "left_shift"
                                 }
                             ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "right_alt"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "caps_lock"
+                                }
+                            ]
                         }
                     ]
                 },
@@ -151,11 +161,11 @@
                     "simple_modifications": [
                         {
                             "from": {
-                                "key_code": "left_option"
+                                "key_code": "escape"
                             },
                             "to": [
                                 {
-                                    "key_code": "left_command"
+                                    "key_code": "grave_accent_and_tilde"
                                 }
                             ]
                         },
@@ -171,11 +181,11 @@
                         },
                         {
                             "from": {
-                                "key_code": "escape"
+                                "key_code": "left_option"
                             },
                             "to": [
                                 {
-                                    "key_code": "grave_accent_and_tilde"
+                                    "key_code": "left_command"
                                 }
                             ]
                         }
