@@ -184,6 +184,8 @@ map("n", "<C-h>", "<C-\\><C-n><C-w>h", noremap)
 map("n", "<C-j>", "<C-\\><C-n><C-w>j", noremap)
 map("n", "<C-k>", "<C-\\><C-n><C-w>k", noremap)
 map("n", "<C-l>", "<C-\\><C-n><C-w>l", noremap)
+-- In terminal mode
+map('t', '<C-w>', '<C-\\><C-n>', noremap)
 
 -- lightspeed settings
 require("lightspeed").setup({
