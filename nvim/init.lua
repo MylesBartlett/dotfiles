@@ -73,7 +73,7 @@ require("packer").startup(function(use)
 	-- objects for moving
 	use("nvim-treesitter/nvim-treesitter-textobjects")
 	--  shows the context of the currently visible buffer content
-	use("romgrk/nvim-treesitter-context")
+	-- use("romgrk/nvim-treesitter-context")
 
 	-- colorscheme
 	use({ "npxbr/gruvbox.nvim", requires = { "rktjmp/lush.nvim" } })
@@ -188,25 +188,28 @@ map("n", "<C-l>", "<C-\\><C-n><C-w>l", noremap)
 map('t', '<C-w>', '<C-\\><C-n>', noremap)
 
 -- lightspeed settings
-require("lightspeed").setup({
-	jump_to_first_match = true,
-	jump_on_partial_input_safety_timeout = 400,
-	-- This can get _really_ slow if the window has a lot of content,
-	-- turn it on only if your machine can always cope with it.
-	highlight_unique_chars = false,
-	grey_out_search_area = true,
-	match_only_the_start_of_same_char_seqs = true,
-	limit_ft_matches = 5,
-	x_mode_prefix_key = "<c-x>",
-	substitute_chars = { ["\r"] = "¬" },
-	instant_repeat_fwd_key = nil,
-	instant_repeat_bwd_key = nil,
-	-- If no values are given, these will be set at runtime,
-	-- based on `jump_to_first_match`.
-	labels = nil,
-	cycle_group_fwd_key = nil,
-	cycle_group_bwd_key = nil,
-})
+require'lightspeed'.setup {
+  ignore_case = true,
+  repeat_ft_with_target_char = true,
+  -- exit_after_idle_msecs = { unlabeled = 1000, labeled = nil },
+  --- s/x ---
+  -- jump_to_unique_chars = { safety_timeout = 400 },
+  -- match_only_the_start_of_same_char_seqs = true,
+  -- force_beacons_into_match_width = false,
+  -- Display characters in a custom way in the highlighted matches.
+  -- substitute_chars = { ['\r'] = '¬', },
+  -- Leaving the appropriate list empty effectively disables "smart" mode,
+  -- and forces auto-jump to be on or off.
+  --[[ safe_labels = {},
+  labels = {}, ]]
+  -- These keys are captured directly by the plugin at runtime.
+  --[[ special_keys = {
+    next_match_group = '<space>',
+    prev_match_group = '<tab>',
+  }, ]]
+  --- f/t ---
+  -- limit_ft_matches = 4,
+}
 
 -- fzf-lua
 map("n", "<C-p>", "<cmd>lua require('fzf-lua').files()<CR>", { noremap = true, silent = true })
@@ -553,27 +556,30 @@ g.vimtex_quickfix_latexlog = {
 --     Treesitter        --
 ---------------------------
 local ts = require("nvim-treesitter.configs")
-ts.setup({
-	ensure_installed = "maintained",
-	highlight = { enable = true },
-	textobjects = {
-		select = {
-			enable = true,
-			keymaps = {
-				-- You can use the capture groups defined in textobjects.scm
-				["af"] = "@function.outer",
-				["if"] = "@function.inner",
-				["ac"] = "@class.outer",
-				["ic"] = "@class.inner",
+ts.setup {
+  -- One of "all", "maintained" (parsers with maintainers), or a list of languages
+  ensure_installed = "maintained",
 
-				-- Or you can define your own textobjects like this
-				--[[ ["iF"] = {
-          python = "(function_definition) @function",
-        }, ]]
-			},
-		},
-	},
-})
+  -- Install languages synchronously (only applied to `ensure_installed`)
+  sync_install = true,
+
+  -- List of parsers to ignore installing
+  ignore_install = { },
+
+  highlight = {
+    -- `false` will disable the whole extension
+    enable = true,
+
+    -- list of language that will be disabled
+    disable = { },
+
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
 
 ---------------------------
 --     colorscheme       --
