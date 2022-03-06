@@ -69,7 +69,7 @@ require("packer").startup(function(use)
 	})
 
 	-- Treesitter - syntax lighting
-	use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
 	-- objects for moving
 	use("nvim-treesitter/nvim-treesitter-textobjects")
 	--  shows the context of the currently visible buffer content
@@ -176,7 +176,12 @@ map("n", "c#", '?\\<<C-R>=expand("<cword>")<CR>\\>\\C<CR>``cgn', noremap)
 
 -- global selection
 map("x", "ie", "gg0gG$", { noremap = true, silent = true })
-map("o", "ie", 'cmd<C-U>execute "normal! m`"<Bar>keepjumps normal! ggVG<CR> ', { noremap = true, silent = true })
+map(
+	"o",
+	"ie",
+	'cmd<C-U>execute "normal! m`"<Bar>keepjumps normal! ggVG<CR> ',
+	{ noremap = true, silent = true }
+)
 
 -- window movement
 -- In normal mode
@@ -185,29 +190,64 @@ map("n", "<C-j>", "<C-\\><C-n><C-w>j", noremap)
 map("n", "<C-k>", "<C-\\><C-n><C-w>k", noremap)
 map("n", "<C-l>", "<C-\\><C-n><C-w>l", noremap)
 -- In terminal mode
-map('t', '<C-w>', '<C-\\><C-n>', noremap)
+map("t", "<C-w>", "<C-\\><C-n>", noremap)
 
 -- lightspeed settings
-require'lightspeed'.setup {
-  ignore_case = true,
-  repeat_ft_with_target_char = true,
-}
+require("lightspeed").setup({
+	ignore_case = true,
+	repeat_ft_with_target_char = true,
+})
 
 -- fzf-lua
 map("n", "<C-p>", "<cmd>lua require('fzf-lua').files()<CR>", { noremap = true, silent = true })
-map("n", "<leader>f", "<cmd>lua require('fzf-lua').live_grep()<CR>", { noremap = true, silent = true })
-map("n", "<leader><C-f>", "<cmd>lua require('fzf-lua').live_grep_resume()<CR>", { noremap = true, silent = true })
-map("n", "<leader>\\", "<cmd>lua require('fzf-lua').quickfix()<CR>", { noremap = true, silent = true })
-map("n", "<leader>a", "<cmd>lua require('fzf-lua').code_actions()<CR>", { noremap = true, silent = true })
+map(
+	"n",
+	"<leader>f",
+	"<cmd>lua require('fzf-lua').live_grep()<CR>",
+	{ noremap = true, silent = true }
+)
+map(
+	"n",
+	"<leader><C-f>",
+	"<cmd>lua require('fzf-lua').live_grep_resume()<CR>",
+	{ noremap = true, silent = true }
+)
+map(
+	"n",
+	"<leader>\\",
+	"<cmd>lua require('fzf-lua').quickfix()<CR>",
+	{ noremap = true, silent = true }
+)
+map(
+	"n",
+	"<leader>a",
+	"<cmd>lua require('fzf-lua').code_actions()<CR>",
+	{ noremap = true, silent = true }
+)
 map("n", "<leader>/", "<cmd>lua require('fzf-lua').lines()<CR>", { noremap = true, silent = true })
 -- LSP integration
-map("n", "<leader>o", "<cmd>lua require('fzf-lua').lsp_document_symbols()<CR>", { noremap = true, silent = true })
+map(
+	"n",
+	"<leader>o",
+	"<cmd>lua require('fzf-lua').lsp_document_symbols()<CR>",
+	{ noremap = true, silent = true }
+)
 map("n", "<leader>w", "<cmd>lua require('fzf-lua').lsp_live_workspace_symbols()<CR>", {
 	noremap = true,
 	silent = true,
 })
-map("n", "<leader>[", "<cmd>lua require('fzf-lua').lsp_document_diagnostics()<CR>", { noremap = true, silent = true })
-map("n", "<leader>]", "<cmd>lua require('fzf-lua').lsp_workspace_diagnostics()<CR>", { noremap = true, silent = true })
+map(
+	"n",
+	"<leader>[",
+	"<cmd>lua require('fzf-lua').lsp_document_diagnostics()<CR>",
+	{ noremap = true, silent = true }
+)
+map(
+	"n",
+	"<leader>]",
+	"<cmd>lua require('fzf-lua').lsp_workspace_diagnostics()<CR>",
+	{ noremap = true, silent = true }
+)
 
 local actions = require("fzf-lua.actions")
 require("fzf-lua").setup({
@@ -538,37 +578,36 @@ g.vimtex_quickfix_latexlog = {
 --     Treesitter        --
 ---------------------------
 local ts = require("nvim-treesitter.configs")
-ts.setup {
-  -- One of "all", "maintained" (parsers with maintainers), or a list of languages
-  ensure_installed = "maintained",
+ts.setup({
+	-- One of "all", "maintained" (parsers with maintainers), or a list of languages
+	ensure_installed = "maintained",
 
-  -- Install languages synchronously (only applied to `ensure_installed`)
-  sync_install = true,
+	-- Install languages synchronously (only applied to `ensure_installed`)
+	sync_install = true,
 
-  -- List of parsers to ignore installing
-  ignore_install = { },
+	-- List of parsers to ignore installing
+	ignore_install = {},
 
-  highlight = {
-    -- `false` will disable the whole extension
-    enable = true,
+	highlight = {
+		-- `false` will disable the whole extension
+		enable = true,
 
-    -- list of language that will be disabled
-    disable = { },
+		-- list of language that will be disabled
+		disable = {},
 
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
-  },
-}
+		-- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+		-- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+		-- Using this option may slow down your editor, and you may see some duplicate highlights.
+		-- Instead of true it can also be a list of languages
+		additional_vim_regex_highlighting = false,
+	},
+})
 
 ---------------------------
 --     colorscheme       --
 ---------------------------
 vim.o.background = "dark"
 cmd([[colorscheme gruvbox]])
-
 execute([[hi TreesitterContext ctermbg=gray guibg=Gray]])
 
 ---------------------------
@@ -606,8 +645,10 @@ local on_attach = function(client, bufnr)
 	vim.lsp.handlers["textDocument/references"] = require("lsputil.locations").references_handler
 	vim.lsp.handlers["textDocument/definition"] = require("lsputil.locations").definition_handler
 	vim.lsp.handlers["textDocument/declaration"] = require("lsputil.locations").declaration_handler
-	vim.lsp.handlers["textDocument/typeDefinition"] = require("lsputil.locations").typeDefinition_handler
-	vim.lsp.handlers["textDocument/implementation"] = require("lsputil.locations").implementation_handler
+	vim.lsp.handlers["textDocument/typeDefinition"] =
+		require("lsputil.locations").typeDefinition_handler
+	vim.lsp.handlers["textDocument/implementation"] =
+		require("lsputil.locations").implementation_handler
 	vim.lsp.handlers["textDocument/documentSymbol"] = require("lsputil.symbols").document_handler
 	vim.lsp.handlers["workspace/symbol"] = require("lsputil.symbols").workspace_handler
 
