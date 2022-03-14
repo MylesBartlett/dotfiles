@@ -135,7 +135,7 @@ require("packer").startup(function(use)
 	use({ "simeji/winresizer" })
 
 	-- remember cursor position
-	use({ "farmergreg/vim-lastplace" })
+	use("ethanholz/nvim-lastplace")
 
 	-- makes built-in LSP actions more use-friendly
 	use({ "RishabhRD/popfix" })
@@ -143,6 +143,18 @@ require("packer").startup(function(use)
 
 	-- Text objects
 	use("wellle/targets.vim")
+
+	-- better quickfix windows (including fzf-support and floating previews)
+	use({ "kevinhwang91/nvim-bqf" })
+	use({
+		"junegunn/fzf",
+		run = function()
+			vim.fn["fzf#install"]()
+		end,
+	})
+
+	--  persist and toggle multiple terminals during an editing session
+	use({ "akinsho/toggleterm.nvim" })
 end)
 
 ---------------------------
@@ -176,12 +188,7 @@ map("n", "c#", '?\\<<C-R>=expand("<cword>")<CR>\\>\\C<CR>``cgn', noremap)
 
 -- global selection
 map("x", "ie", "gg0gG$", { noremap = true, silent = true })
-map(
-	"o",
-	"ie",
-	'cmd<C-U>execute "normal! m`"<Bar>keepjumps normal! ggVG<CR> ',
-	{ noremap = true, silent = true }
-)
+map("o", "ie", 'cmd<C-U>execute "normal! m`"<Bar>keepjumps normal! ggVG<CR> ', { noremap = true, silent = true })
 
 -- window movement
 -- In normal mode
@@ -200,54 +207,19 @@ require("lightspeed").setup({
 
 -- fzf-lua
 map("n", "<C-p>", "<cmd>lua require('fzf-lua').files()<CR>", { noremap = true, silent = true })
-map(
-	"n",
-	"<leader>f",
-	"<cmd>lua require('fzf-lua').live_grep()<CR>",
-	{ noremap = true, silent = true }
-)
-map(
-	"n",
-	"<leader><C-f>",
-	"<cmd>lua require('fzf-lua').live_grep_resume()<CR>",
-	{ noremap = true, silent = true }
-)
-map(
-	"n",
-	"<leader>\\",
-	"<cmd>lua require('fzf-lua').quickfix()<CR>",
-	{ noremap = true, silent = true }
-)
-map(
-	"n",
-	"<leader>a",
-	"<cmd>lua require('fzf-lua').code_actions()<CR>",
-	{ noremap = true, silent = true }
-)
+map("n", "<leader>f", "<cmd>lua require('fzf-lua').live_grep()<CR>", { noremap = true, silent = true })
+map("n", "<leader><C-f>", "<cmd>lua require('fzf-lua').live_grep_resume()<CR>", { noremap = true, silent = true })
+map("n", "<leader>\\", "<cmd>lua require('fzf-lua').quickfix()<CR>", { noremap = true, silent = true })
+map("n", "<leader>a", "<cmd>lua require('fzf-lua').code_actions()<CR>", { noremap = true, silent = true })
 map("n", "<leader>/", "<cmd>lua require('fzf-lua').lines()<CR>", { noremap = true, silent = true })
 -- LSP integration
-map(
-	"n",
-	"<leader>o",
-	"<cmd>lua require('fzf-lua').lsp_document_symbols()<CR>",
-	{ noremap = true, silent = true }
-)
+map("n", "<leader>o", "<cmd>lua require('fzf-lua').lsp_document_symbols()<CR>", { noremap = true, silent = true })
 map("n", "<leader>w", "<cmd>lua require('fzf-lua').lsp_live_workspace_symbols()<CR>", {
 	noremap = true,
 	silent = true,
 })
-map(
-	"n",
-	"<leader>[",
-	"<cmd>lua require('fzf-lua').lsp_document_diagnostics()<CR>",
-	{ noremap = true, silent = true }
-)
-map(
-	"n",
-	"<leader>]",
-	"<cmd>lua require('fzf-lua').lsp_workspace_diagnostics()<CR>",
-	{ noremap = true, silent = true }
-)
+map("n", "<leader>[", "<cmd>lua require('fzf-lua').lsp_document_diagnostics()<CR>", { noremap = true, silent = true })
+map("n", "<leader>]", "<cmd>lua require('fzf-lua').lsp_workspace_diagnostics()<CR>", { noremap = true, silent = true })
 
 local actions = require("fzf-lua.actions")
 require("fzf-lua").setup({
@@ -574,6 +546,52 @@ g.vimtex_quickfix_latexlog = {
 	},
 }
 
+-- lastplace
+require("nvim-lastplace").setup({
+	lastplace_ignore_buftype = { "quickfix", "nofile", "help" },
+	lastplace_ignore_filetype = { "gitcommit", "gitrebase", "svn", "hgcommit" },
+	lastplace_open_folds = true,
+})
+
+-- bqf [ https://github.com/kevinhwang91/nvim-bqf ]
+require("bqf").setup({
+	auto_enable = true,
+	auto_resize_height = true, -- highly recommended enable
+	preview = {
+		win_height = 12,
+		win_vheight = 12,
+	},
+})
+
+-- toggleterm [ https://github.com/akinsho/toggleterm.nvim ]
+require("toggleterm").setup({
+	-- size can be a number or function which is passed the current terminal
+	size = function(term)
+		if term.direction == "horizontal" then
+			return 12
+		elseif term.direction == "vertical" then
+			return vim.o.columns * 0.35
+		end
+	end,
+	open_mapping = [[<c-\>]],
+	shade_terminals = false,
+	start_in_insert = false,
+	insert_mappings = true, -- whether or not the open mapping applies in insert mode
+	terminal_mappings = true, -- whether or not the open mapping applies in the opened terminals
+	persist_size = true,
+	close_on_exit = true, -- close the terminal window when the process exits
+	shell = vim.o.shell, -- change the default shell
+})
+
+function _G.set_terminal_keymaps()
+	local opts = { noremap = true }
+	vim.api.nvim_buf_set_keymap(0, "t", "<esc>", [[<C-\><C-n>]], opts)
+	vim.api.nvim_buf_set_keymap(0, "t", "<C-h>", [[<C-\><C-n><C-W>h]], opts)
+	vim.api.nvim_buf_set_keymap(0, "t", "<C-j>", [[<C-\><C-n><C-W>j]], opts)
+	vim.api.nvim_buf_set_keymap(0, "t", "<C-k>", [[<C-\><C-n><C-W>k]], opts)
+	vim.api.nvim_buf_set_keymap(0, "t", "<C-l>", [[<C-\><C-n><C-W>l]], opts)
+end
+
 ---------------------------
 --     Treesitter        --
 ---------------------------
@@ -607,7 +625,8 @@ ts.setup({
 --     colorscheme       --
 ---------------------------
 vim.o.background = "dark"
-cmd([[colorscheme gruvbox]])
+vim.opt.termguicolors = true
+vim.cmd("colorscheme gruvbox")
 execute([[hi TreesitterContext ctermbg=gray guibg=Gray]])
 
 ---------------------------
@@ -645,10 +664,8 @@ local on_attach = function(client, bufnr)
 	vim.lsp.handlers["textDocument/references"] = require("lsputil.locations").references_handler
 	vim.lsp.handlers["textDocument/definition"] = require("lsputil.locations").definition_handler
 	vim.lsp.handlers["textDocument/declaration"] = require("lsputil.locations").declaration_handler
-	vim.lsp.handlers["textDocument/typeDefinition"] =
-		require("lsputil.locations").typeDefinition_handler
-	vim.lsp.handlers["textDocument/implementation"] =
-		require("lsputil.locations").implementation_handler
+	vim.lsp.handlers["textDocument/typeDefinition"] = require("lsputil.locations").typeDefinition_handler
+	vim.lsp.handlers["textDocument/implementation"] = require("lsputil.locations").implementation_handler
 	vim.lsp.handlers["textDocument/documentSymbol"] = require("lsputil.symbols").document_handler
 	vim.lsp.handlers["workspace/symbol"] = require("lsputil.symbols").workspace_handler
 
