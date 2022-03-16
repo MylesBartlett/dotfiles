@@ -77,6 +77,7 @@ require("packer").startup(function(use)
 
 	-- colorscheme
 	use({ "npxbr/gruvbox.nvim", requires = { "rktjmp/lush.nvim" } })
+	use("EdenEast/nightfox.nvim")
 
 	-- show content of registers
 	use("tversteeg/registers.nvim")
@@ -109,15 +110,6 @@ require("packer").startup(function(use)
 
 	-- git integration (execute git commands)
 	use("lambdalisue/gina.vim")
-
-	-- git integration (mark added/modified/deleted lines)
-	use({
-		"lewis6991/gitsigns.nvim",
-		requires = { "nvim-lua/plenary.nvim" },
-		config = function()
-			require("gitsigns").setup()
-		end,
-	})
 
 	-- auto close parens
 	use("Raimondi/delimitMate")
@@ -162,6 +154,8 @@ require("packer").startup(function(use)
 	-- Provides a pretty list for showing diagnostics, references, telescope results, quickfix
 	-- and location lists to help you solve all the trouble your code is causing.
 	use({ "folke/trouble.nvim", requires = "kyazdani42/nvim-web-devicons" })
+
+	use({ "stevearc/aerial.nvim" })
 end)
 
 ---------------------------
@@ -517,7 +511,7 @@ cmd([[au TextYankPost * lua vim.highlight.on_yank {on_visual = false}]])
 ---------------------------
 opt.showmode = false
 g.lightline = {
-	colorscheme = "wombat",
+	colorscheme = "one",
 	active = {
 		left = { { "mode", "paste" }, { "readonly", "relativepath", "modified" } },
 	},
@@ -647,6 +641,37 @@ vim.api.nvim_set_keymap("n", "<leader>tl", "<cmd>Trouble loclist<cr>", { silent 
 vim.api.nvim_set_keymap("n", "<leader>tq", "<cmd>Trouble quickfix<cr>", { silent = true, noremap = true })
 vim.api.nvim_set_keymap("n", "gR", "<cmd>Trouble lsp_references<cr>", { silent = true, noremap = true })
 
+--- aerial.nvim [ https://github.com/stevearc/aerial.nvim ]
+require("aerial").setup({
+	-- Highlight the closest symbol if the cursor is not exactly on one.
+	highlight_closest = true,
+	-- Highlight the symbol in the source buffer when cursor is in the aerial win
+	highlight_on_hover = false,
+	-- These control the width of the aerial window.
+	-- They can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
+	-- min_width and max_width can be a list of mixed types.
+	-- max_width = {40, 0.2} means "the lesser of 40 columns or 20% of total"
+	max_width = { 40, 0.2 },
+	width = nil,
+	min_width = 10,
+	-- Show box drawing characters for the tree hierarchy
+	show_guides = false,
+
+	on_attach = function(bufnr)
+		-- Toggle the aerial window with <leader>a
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>l", "<cmd>AerialToggle!<CR>", {})
+		-- Jump forwards/backwards with '{' and '}'
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "{", "<cmd>AerialPrev<CR>", {})
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "}", "<cmd>AerialNext<CR>", {})
+		-- Jump up the tree with '[[' or ']]'
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "[[", "<cmd>AerialPrevUp<CR>", {})
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "]]", "<cmd>AerialNextUp<CR>", {})
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "]]", "<cmd>AerialNextUp<CR>", {})
+	end,
+})
+-- fzf integration
+map("n", "<leader>L", "<cmd>call aerial#fzf()<cr>", { silent = true })
+
 ---------------------------
 --     Treesitter        --
 ---------------------------
@@ -681,7 +706,27 @@ ts.setup({
 ---------------------------
 vim.o.background = "dark"
 vim.opt.termguicolors = true
-vim.cmd("colorscheme gruvbox")
+
+-- nightfox configuration
+require("nightfox").setup({
+	--[[ options = {
+		terminal_colors = true,
+		dim_inactive = true,
+		styles = { -- Style to be applied to different syntax groups
+			comments = "NONE",
+			functions = "bold",
+			keywords = "bold",
+			numbers = "NONE",
+			strings = "NONE",
+			types = "bold",
+			variables = "NONE",
+		},
+	},
+	]]
+})
+
+-- setup must be called before loading
+vim.cmd("colorscheme duskfox")
 execute([[hi TreesitterContext ctermbg=gray guibg=Gray]])
 
 ---------------------------
@@ -726,6 +771,7 @@ local on_attach = function(client, bufnr)
 
 	-- hook in plugins depending on LSP
 	require("illuminate").on_attach(client)
+	require("aerial").on_attach(client)
 end
 
 local lspconfig = require("lspconfig")
