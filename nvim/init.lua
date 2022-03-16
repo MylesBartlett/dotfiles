@@ -617,9 +617,9 @@ require("trouble").setup({
 		next = "j", -- next item
 	},
 	indent_lines = true, -- add an indent guide below the fold icons
-	auto_open = true, -- automatically open the list when you have diagnostics
+	auto_open = false, -- automatically open the list when you have diagnostics
 	auto_close = false, -- automatically close the list when you have no diagnostics
-	auto_preview = false, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
+	auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
 	auto_fold = false, -- automatically fold a file trouble list at creation
 	-- auto_jump = { "lsp_definitions" }, -- for the given modes, automatically jump if there is only a single result
 	signs = {
@@ -645,13 +645,13 @@ require("aerial").setup({
 	-- Highlight the closest symbol if the cursor is not exactly on one.
 	highlight_closest = true,
 	-- Highlight the symbol in the source buffer when cursor is in the aerial win
-	highlight_on_hover = false,
+	highlight_on_hover = true,
 	-- These control the width of the aerial window.
 	-- They can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
 	-- min_width and max_width can be a list of mixed types.
 	-- max_width = {40, 0.2} means "the lesser of 40 columns or 20% of total"
 	max_width = { 40, 0.2 },
-	width = 30,
+	width = nil,
 	min_width = 10,
 	-- Show box drawing characters for the tree hierarchy
 	show_guides = false,
@@ -753,7 +753,7 @@ local on_attach = function(client, bufnr)
 
 	-- hook in plugins depending on LSP
 	require("illuminate").on_attach(client)
-	require("aerial").on_attach(client)
+	-- require("aerial").on_attach(client)
 end
 
 local lspconfig = require("lspconfig")
@@ -797,10 +797,10 @@ g.Illuminate_highlightUnderCursor = 0
 ---------------------------
 -- You will likely want to reduce updatetime which affects CursorHold
 -- note: this setting is global and should be set only once
-vim.o.updatetime = 100
-vim.cmd([[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
+-- vim.o.updatetime = 100
+-- vim.cmd([[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
 vim.diagnostic.config({
-	virtual_text = false,
+	virtual_text = true,
 	signs = true,
 	underline = true,
 	update_in_insert = false,
