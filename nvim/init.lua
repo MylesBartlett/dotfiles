@@ -76,7 +76,6 @@ require("packer").startup(function(use)
 	use("romgrk/nvim-treesitter-context")
 
 	-- colorscheme
-	use({ "npxbr/gruvbox.nvim", requires = { "rktjmp/lush.nvim" } })
 	use("EdenEast/nightfox.nvim")
 
 	-- show content of registers
@@ -706,27 +705,7 @@ ts.setup({
 ---------------------------
 vim.o.background = "dark"
 vim.opt.termguicolors = true
-
--- nightfox configuration
-require("nightfox").setup({
-	--[[ options = {
-		terminal_colors = true,
-		dim_inactive = true,
-		styles = { -- Style to be applied to different syntax groups
-			comments = "NONE",
-			functions = "bold",
-			keywords = "bold",
-			numbers = "NONE",
-			strings = "NONE",
-			types = "bold",
-			variables = "NONE",
-		},
-	},
-	]]
-})
-
--- setup must be called before loading
-vim.cmd("colorscheme duskfox")
+vim.cmd("colorscheme gruvbox")
 execute([[hi TreesitterContext ctermbg=gray guibg=Gray]])
 
 ---------------------------
