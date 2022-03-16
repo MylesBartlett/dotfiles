@@ -76,7 +76,7 @@ require("packer").startup(function(use)
 	use("romgrk/nvim-treesitter-context")
 
 	-- colorscheme
-	use("EdenEast/nightfox.nvim")
+	use { "ellisonleao/gruvbox.nvim" }
 
 	-- show content of registers
 	use("tversteeg/registers.nvim")
