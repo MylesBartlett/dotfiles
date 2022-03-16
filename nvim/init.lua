@@ -586,11 +586,11 @@ require("toggleterm").setup({
 
 --- trouble [ https://github.com/folke/trouble.nvim ]
 require("trouble").setup({
-	position = "bottom", -- position of the list can be: bottom, top, left, right
+	position = "left", -- position of the list can be: bottom, top, left, right
 	height = 10, -- height of the trouble list when position is top or bottom
-	width = 50, -- width of the list when position is left or right
+	width = 30, -- width of the list when position is left or right
 	icons = true, -- use devicons for filenames
-	mode = "workspace_diagnostics", -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
+	mode = "document_diagnostics", -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
 	fold_open = "", -- icon used for open folds
 	fold_closed = "", -- icon used for closed folds
 	group = true, -- group results by file
@@ -617,11 +617,11 @@ require("trouble").setup({
 		next = "j", -- next item
 	},
 	indent_lines = true, -- add an indent guide below the fold icons
-	auto_open = false, -- automatically open the list when you have diagnostics
+	auto_open = true, -- automatically open the list when you have diagnostics
 	auto_close = false, -- automatically close the list when you have no diagnostics
-	auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
+	auto_preview = false, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
 	auto_fold = false, -- automatically fold a file trouble list at creation
-	auto_jump = { "lsp_definitions" }, -- for the given modes, automatically jump if there is only a single result
+	-- auto_jump = { "lsp_definitions" }, -- for the given modes, automatically jump if there is only a single result
 	signs = {
 		-- icons / text used for a diagnostic
 		error = "",
@@ -630,7 +630,7 @@ require("trouble").setup({
 		information = "",
 		other = "﫠",
 	},
-	use_diagnostic_signs = true, -- enabling this will use the signs defined in your lsp client
+	use_diagnostic_signs = false, -- enabling this will use the signs defined in your lsp client
 })
 
 vim.api.nvim_set_keymap("n", "<leader>tt", "<cmd>Trouble<cr>", { silent = true, noremap = true })
@@ -651,10 +651,13 @@ require("aerial").setup({
 	-- min_width and max_width can be a list of mixed types.
 	-- max_width = {40, 0.2} means "the lesser of 40 columns or 20% of total"
 	max_width = { 40, 0.2 },
-	width = nil,
+	width = 30,
 	min_width = 10,
 	-- Show box drawing characters for the tree hierarchy
 	show_guides = false,
+	-- Automatically open aerial when entering supported buffers.
+	-- This can be a function (see :help aerial-open-automatic)
+	open_automatic = true,
 
 	on_attach = function(bufnr)
 		-- Toggle the aerial window with <leader>a
@@ -669,7 +672,7 @@ require("aerial").setup({
 	end,
 })
 -- fzf integration
-map("n", "<leader>L", "<cmd>call aerial#fzf()<cr>", { silent = true })
+map("n", "<leader>L", "<cmd>call aerial#fzf()<cr>", { silent = true, noremap = false })
 
 ---------------------------
 --     Treesitter        --
