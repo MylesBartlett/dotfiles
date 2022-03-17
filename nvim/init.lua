@@ -76,7 +76,7 @@ require("packer").startup(function(use)
 	use("romgrk/nvim-treesitter-context")
 
 	-- colorscheme
-	use { "ellisonleao/gruvbox.nvim" }
+	use({ "ellisonleao/gruvbox.nvim" })
 
 	-- show content of registers
 	use("tversteeg/registers.nvim")
@@ -586,7 +586,7 @@ require("toggleterm").setup({
 
 --- trouble [ https://github.com/folke/trouble.nvim ]
 require("trouble").setup({
-	position = "left", -- position of the list can be: bottom, top, left, right
+	position = "right", -- position of the list can be: bottom, top, left, right
 	height = 10, -- height of the trouble list when position is top or bottom
 	width = 30, -- width of the list when position is left or right
 	icons = true, -- use devicons for filenames
@@ -619,7 +619,7 @@ require("trouble").setup({
 	indent_lines = true, -- add an indent guide below the fold icons
 	auto_open = false, -- automatically open the list when you have diagnostics
 	auto_close = false, -- automatically close the list when you have no diagnostics
-	auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
+	auto_preview = false, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
 	auto_fold = false, -- automatically fold a file trouble list at creation
 	-- auto_jump = { "lsp_definitions" }, -- for the given modes, automatically jump if there is only a single result
 	signs = {
@@ -630,7 +630,7 @@ require("trouble").setup({
 		information = "",
 		other = "﫠",
 	},
-	use_diagnostic_signs = false, -- enabling this will use the signs defined in your lsp client
+	use_diagnostic_signs = true, -- enabling this will use the signs defined in your lsp client
 })
 
 vim.api.nvim_set_keymap("n", "<leader>tt", "<cmd>Trouble<cr>", { silent = true, noremap = true })
@@ -652,16 +652,21 @@ require("aerial").setup({
 	-- max_width = {40, 0.2} means "the lesser of 40 columns or 20% of total"
 	max_width = { 40, 0.2 },
 	width = nil,
-	min_width = 10,
+	min_width = 20,
 	-- Show box drawing characters for the tree hierarchy
 	show_guides = false,
 	-- Automatically open aerial when entering supported buffers.
 	-- This can be a function (see :help aerial-open-automatic)
-	open_automatic = true,
+	open_automatic = false,
+	-- Enum: prefer_right, prefer_left, right, left, float
+	-- Determines the default direction to open the aerial window. The 'prefer'
+	-- options will open the window in the other direction *if* there is a
+	-- different buffer in the way of the preferred direction
+	default_direction = "prefer_left",
 
 	on_attach = function(bufnr)
 		-- Toggle the aerial window with <leader>a
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>l", "<cmd>AerialToggle!<CR>", {})
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>ll", "<cmd>AerialToggle!<CR>", {})
 		-- Jump forwards/backwards with '{' and '}'
 		vim.api.nvim_buf_set_keymap(bufnr, "n", "{", "<cmd>AerialPrev<CR>", {})
 		vim.api.nvim_buf_set_keymap(bufnr, "n", "}", "<cmd>AerialNext<CR>", {})
@@ -672,7 +677,7 @@ require("aerial").setup({
 	end,
 })
 -- fzf integration
-map("n", "<leader>L", "<cmd>call aerial#fzf()<cr>", { silent = true, noremap = false })
+map("n", "<leader>lf", "<cmd>call aerial#fzf()<cr>", { silent = true, noremap = false })
 
 ---------------------------
 --     Treesitter        --
@@ -710,6 +715,26 @@ vim.o.background = "dark"
 vim.opt.termguicolors = true
 vim.cmd("colorscheme gruvbox")
 execute([[hi TreesitterContext ctermbg=gray guibg=Gray]])
+
+---------------------------
+--        icons          --
+---------------------------
+require("nvim-web-devicons").setup({
+	-- your personnal icons can go here (to override)
+	-- you can specify color or cterm_color instead of specifying both of them
+	-- DevIcon will be appended to `name`
+	override = {
+		zsh = {
+			icon = "",
+			color = "#428850",
+			cterm_color = "65",
+			name = "Zsh",
+		},
+	},
+	-- globally enable default icons (default to false)
+	-- will get overriden by `get_icons` option
+	default = true,
+})
 
 ---------------------------
 --         LSP           --
@@ -797,14 +822,21 @@ g.Illuminate_highlightUnderCursor = 0
 ---------------------------
 -- You will likely want to reduce updatetime which affects CursorHold
 -- note: this setting is global and should be set only once
--- vim.o.updatetime = 100
--- vim.cmd([[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
+vim.o.updatetime = 250
+vim.cmd([[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
 vim.diagnostic.config({
-	virtual_text = true,
+	virtual_text = false,
 	signs = true,
 	underline = true,
 	update_in_insert = false,
 	severity_sort = true,
+    	update_in_insert = false,
+	float = {
+	    show_header = true,
+	    source = 'if_many',
+	    border = 'rounded',
+	    focusable = false,
+	},
 })
 
 --- EFM LSP for formatting ---
