@@ -762,8 +762,10 @@ local on_attach = function(client, bufnr)
 	buf_set_keymap("n", "<leader>k", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
 	buf_set_keymap("n", "<leader>r", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
 	buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-	buf_set_keymap("n", "[d", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
-	buf_set_keymap("n", "]d", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
+	-- diagnostics-related bindings
+	buf_set_keymap("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<CR>", opts)
+	buf_set_keymap("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<CR>", opts)
+	buf_set_keymap("n", "<C-k>", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
 
 	vim.api.nvim_command([[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()]])
 	-- nvim-lsputils-
@@ -818,28 +820,83 @@ lspconfig.rust_analyzer.setup({
 g.Illuminate_highlightUnderCursor = 0
 
 ---------------------------
---      Diagnostics      --
+--    LSP Diagnostics    --
 ---------------------------
--- You will likely want to reduce updatetime which affects CursorHold
--- note: this setting is global and should be set only once
-vim.o.updatetime = 250
-vim.cmd([[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
+-- https://github.com/neovim/nvim-lspconfig/wiki/UI-customization
+---- Customize how to show diagnostics:
+-- No virtual text (distracting!), show popup window on hover.
+-- @see https://github.com/neovim/neovim/pull/16057 for new APIs
 vim.diagnostic.config({
 	virtual_text = false,
-	signs = true,
-	underline = true,
-	update_in_insert = false,
-	severity_sort = true,
-    	update_in_insert = false,
+	underline = {
+		-- Do not underline text when severity is low (INFO or HINT).
+		severity = { min = vim.diagnostic.severity.WARN },
+	},
 	float = {
-	    show_header = true,
-	    source = 'if_many',
-	    border = 'rounded',
-	    focusable = false,
+		source = "always",
+		focusable = false, -- See neovim#16425
+		border = "single",
+
+		-- Customize how diagnostic message will be shown: show error code.
+		format = function(diagnostic)
+			-- See null-ls.nvim#632, neovim#17222 for how to pick up `code`
+			local user_data
+			user_data = diagnostic.user_data or {}
+			user_data = user_data.lsp or user_data.null_ls or user_data
+			local code = (
+										-- TODO: symbol is specific to pylint (will be removed)
+diagnostic.symbol
+					or diagnostic.code
+					or user_data.symbol
+					or user_data.code
+				)
+			if code then
+				return string.format("%s (%s)", diagnostic.message, code)
+			else
+				return diagnostic.message
+			end
+		end,
 	},
 })
 
---- EFM LSP for formatting ---
+_G.LspDiagnosticsShowPopup = function()
+	return vim.diagnostic.open_float(0, { focus = false, scope = "cursor" })
+end
+
+_G.LspDiagnosticsPopupHandler = function()
+	local current_cursor = vim.api.nvim_win_get_cursor(0)
+	local last_popup_cursor = vim.w.lsp_diagnostics_last_cursor or { nil, nil }
+
+	-- Show the popup diagnostics window,
+	-- but only once for the current cursor location (unless moved afterwards).
+	if not (current_cursor[1] == last_popup_cursor[1] and current_cursor[2] == last_popup_cursor[2]) then
+		vim.w.lsp_diagnostics_last_cursor = current_cursor
+		local _, winnr = _G.LspDiagnosticsShowPopup()
+		if winnr ~= nil then
+			vim.api.nvim_win_set_option(winnr, "winblend", 20) -- opacity for diagnostics
+		end
+	end
+end
+
+vim.o.updatetime = 100
+vim.cmd([[
+augroup LSPDiagnosticsOnHover
+  autocmd!
+  autocmd CursorHold * lua _G.LspDiagnosticsPopupHandler()
+augroup END
+]])
+
+vim.fn.sign_define("DiagnosticSignError", { text = "✘", texthl = "DiagnosticSignError" })
+vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn" })
+vim.fn.sign_define("DiagnosticSignInfo", { text = "i", texthl = "DiagnosticSignInfo" })
+vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
+vim.cmd([[
+hi DiagnosticSignError    guifg=#e6645f ctermfg=167
+hi DiagnosticSignWarn     guifg=#b1b14d ctermfg=143
+hi DiagnosticSignHint     guifg=#3e6e9e ctermfg=75
+]])
+
+--- EFM LSP for async formatting/linting ---
 local on_attach = function(client)
 	if client.resolved_capabilities.document_formatting then
 		vim.api.nvim_command([[augroup Format]])
