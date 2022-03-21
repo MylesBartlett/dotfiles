@@ -189,12 +189,7 @@ map("n", "c#", '?\\<<C-R>=expand("<cword>")<CR>\\>\\C<CR>``cgn', noremap)
 
 -- global selection
 map("x", "ie", "gg0gG$", { noremap = true, silent = true })
-map(
-	"o",
-	"ie",
-	'cmd<C-U>execute "normal! m`"<Bar>keepjumps normal! ggVG<CR> ',
-	{ noremap = true, silent = true }
-)
+map("o", "ie", 'cmd<C-U>execute "normal! m`"<Bar>keepjumps normal! ggVG<CR> ', { noremap = true, silent = true })
 
 -- window movement
 -- In normal mode
@@ -213,54 +208,19 @@ require("lightspeed").setup({
 
 -- fzf-lua
 map("n", "<C-p>", "<cmd>lua require('fzf-lua').files()<CR>", { noremap = true, silent = true })
-map(
-	"n",
-	"<leader>f",
-	"<cmd>lua require('fzf-lua').live_grep()<CR>",
-	{ noremap = true, silent = true }
-)
-map(
-	"n",
-	"<leader><C-f>",
-	"<cmd>lua require('fzf-lua').live_grep_resume()<CR>",
-	{ noremap = true, silent = true }
-)
-map(
-	"n",
-	"<leader>\\",
-	"<cmd>lua require('fzf-lua').quickfix()<CR>",
-	{ noremap = true, silent = true }
-)
-map(
-	"n",
-	"<leader>a",
-	"<cmd>lua require('fzf-lua').code_actions()<CR>",
-	{ noremap = true, silent = true }
-)
+map("n", "<leader>f", "<cmd>lua require('fzf-lua').live_grep()<CR>", { noremap = true, silent = true })
+map("n", "<leader><C-f>", "<cmd>lua require('fzf-lua').live_grep_resume()<CR>", { noremap = true, silent = true })
+map("n", "<leader>\\", "<cmd>lua require('fzf-lua').quickfix()<CR>", { noremap = true, silent = true })
+map("n", "<leader>a", "<cmd>lua require('fzf-lua').code_actions()<CR>", { noremap = true, silent = true })
 map("n", "<leader>/", "<cmd>lua require('fzf-lua').lines()<CR>", { noremap = true, silent = true })
 -- LSP integration
-map(
-	"n",
-	"<leader>o",
-	"<cmd>lua require('fzf-lua').lsp_document_symbols()<CR>",
-	{ noremap = true, silent = true }
-)
+map("n", "<leader>o", "<cmd>lua require('fzf-lua').lsp_document_symbols()<CR>", { noremap = true, silent = true })
 map("n", "<leader>w", "<cmd>lua require('fzf-lua').lsp_live_workspace_symbols()<CR>", {
 	noremap = true,
 	silent = true,
 })
-map(
-	"n",
-	"<leader>[",
-	"<cmd>lua require('fzf-lua').lsp_document_diagnostics()<CR>",
-	{ noremap = true, silent = true }
-)
-map(
-	"n",
-	"<leader>]",
-	"<cmd>lua require('fzf-lua').lsp_workspace_diagnostics()<CR>",
-	{ noremap = true, silent = true }
-)
+map("n", "<leader>[", "<cmd>lua require('fzf-lua').lsp_document_diagnostics()<CR>", { noremap = true, silent = true })
+map("n", "<leader>]", "<cmd>lua require('fzf-lua').lsp_workspace_diagnostics()<CR>", { noremap = true, silent = true })
 
 local actions = require("fzf-lua.actions")
 require("fzf-lua").setup({
@@ -674,36 +634,11 @@ require("trouble").setup({
 })
 
 vim.api.nvim_set_keymap("n", "<leader>tt", "<cmd>Trouble<cr>", { silent = true, noremap = true })
-vim.api.nvim_set_keymap(
-	"n",
-	"<leader>tw",
-	"<cmd>Trouble workspace_diagnostics<cr>",
-	{ silent = true, noremap = true }
-)
-vim.api.nvim_set_keymap(
-	"n",
-	"<leader>td",
-	"<cmd>Trouble document_diagnostics<cr>",
-	{ silent = true, noremap = true }
-)
-vim.api.nvim_set_keymap(
-	"n",
-	"<leader>tl",
-	"<cmd>Trouble loclist<cr>",
-	{ silent = true, noremap = true }
-)
-vim.api.nvim_set_keymap(
-	"n",
-	"<leader>tq",
-	"<cmd>Trouble quickfix<cr>",
-	{ silent = true, noremap = true }
-)
-vim.api.nvim_set_keymap(
-	"n",
-	"gR",
-	"<cmd>Trouble lsp_references<cr>",
-	{ silent = true, noremap = true }
-)
+vim.api.nvim_set_keymap("n", "<leader>tw", "<cmd>Trouble workspace_diagnostics<cr>", { silent = true, noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>to", "<cmd>Trouble document_diagnostics<cr>", { silent = true, noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>tl", "<cmd>Trouble loclist<cr>", { silent = true, noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>tq", "<cmd>Trouble quickfix<cr>", { silent = true, noremap = true })
+vim.api.nvim_set_keymap("n", "gR", "<cmd>Trouble lsp_references<cr>", { silent = true, noremap = true })
 
 --- aerial.nvim [ https://github.com/stevearc/aerial.nvim ]
 require("aerial").setup({
@@ -773,6 +708,40 @@ ts.setup({
 	},
 })
 
+-- inject reST syntax highlighting into python docstrings
+require("vim.treesitter.query").set_query(
+	"python",
+	"injections",
+	[[
+((call
+  function: (attribute
+	  object: (identifier) @_re)
+  arguments: (argument_list (string) @regex))
+ (#eq? @_re "re")
+ (#lua-match? @regex "^r.*"))
+​
+; Module docstring
+((module . (expression_statement (string) @rst))
+ (#offset! @rst 0 3 0 -3))
+​
+; Class docstring
+((class_definition
+  body: (block . (expression_statement (string) @rst)))
+ (#offset! @rst 0 3 0 -3))
+​
+; Function/method docstring
+((function_definition
+  body: (block . (expression_statement (string) @rst)))
+ (#offset! @rst 0 3 0 -3))
+​
+; Attribute docstring
+(((expression_statement (assignment)) . (expression_statement (string) @rst))
+ (#offset! @rst 0 3 0 -3))
+​
+(comment) @comment
+]]
+)
+
 ---------------------------
 --     colorscheme       --
 ---------------------------
@@ -838,10 +807,8 @@ local on_attach = function(client, bufnr)
 	vim.lsp.handlers["textDocument/references"] = require("lsputil.locations").references_handler
 	vim.lsp.handlers["textDocument/definition"] = require("lsputil.locations").definition_handler
 	vim.lsp.handlers["textDocument/declaration"] = require("lsputil.locations").declaration_handler
-	vim.lsp.handlers["textDocument/typeDefinition"] =
-		require("lsputil.locations").typeDefinition_handler
-	vim.lsp.handlers["textDocument/implementation"] =
-		require("lsputil.locations").implementation_handler
+	vim.lsp.handlers["textDocument/typeDefinition"] = require("lsputil.locations").typeDefinition_handler
+	vim.lsp.handlers["textDocument/implementation"] = require("lsputil.locations").implementation_handler
 	vim.lsp.handlers["textDocument/documentSymbol"] = require("lsputil.symbols").document_handler
 	vim.lsp.handlers["workspace/symbol"] = require("lsputil.symbols").workspace_handler
 
@@ -910,12 +877,7 @@ vim.diagnostic.config({
 			local user_data
 			user_data = diagnostic.user_data or {}
 			user_data = user_data.lsp or user_data.null_ls or user_data
-			local code = (
-					diagnostic.symbol
-					or diagnostic.code
-					or user_data.symbol
-					or user_data.code
-				)
+			local code = (diagnostic.symbol or diagnostic.code or user_data.symbol or user_data.code)
 			if code then
 				return string.format("%s (%s)", diagnostic.message, code)
 			else
@@ -935,12 +897,7 @@ _G.LspDiagnosticsPopupHandler = function()
 
 	-- Show the popup diagnostics window,
 	-- but only once for the current cursor location (unless moved afterwards).
-	if
-		not (
-			current_cursor[1] == last_popup_cursor[1]
-			and current_cursor[2] == last_popup_cursor[2]
-		)
-	then
+	if not (current_cursor[1] == last_popup_cursor[1] and current_cursor[2] == last_popup_cursor[2]) then
 		vim.w.lsp_diagnostics_last_cursor = current_cursor
 		local _, winnr = _G.LspDiagnosticsShowPopup()
 		if winnr ~= nil then
