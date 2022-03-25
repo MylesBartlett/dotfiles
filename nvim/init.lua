@@ -465,6 +465,22 @@ map("n", "<leader>7", "<Plug>lightline#bufferline#go(7)", {})
 map("n", "<leader>8", "<Plug>lightline#bufferline#go(8)", {})
 map("n", "<leader>9", "<Plug>lightline#bufferline#go(9)", {})
 map("n", "<leader>0", "<Plug>lightline#bufferline#go(10)", {})
+map("n", "<leader>=", "<cmd>bnext<cr>", {})
+map("n", "<leader>-", "<cmd>bprevious<cr>", {})
+
+-- buffer deletion
+
+map("n", "<leader>c1", "<Plug>lightline#bufferline#delete(1)", {})
+map("n", "<leader>c2", "<Plug>lightline#bufferline#delete(2)", {})
+map("n", "<leader>c3", "<Plug>lightline#bufferline#delete(3)", {})
+map("n", "<leader>c4", "<Plug>lightline#bufferline#delete(4)", {})
+map("n", "<leader>c5", "<Plug>lightline#bufferline#delete(5)", {})
+map("n", "<leader>c6", "<Plug>lightline#bufferline#delete(6)", {})
+map("n", "<leader>c7", "<Plug>lightline#bufferline#delete(7)", {})
+map("n", "<leader>c8", "<Plug>lightline#bufferline#delete(8)", {})
+map("n", "<leader>c9", "<Plug>lightline#bufferline#delete(9)", {})
+map("n", "<leader>c10", "<Plug>lightline#bufferline#delete(10)", {})
+
 -- gina keymaps
 map("n", "<leader>gs", "<cmd>Gina status<cr>", noremap)
 map("n", "<leader>gc", "<cmd>Gina commit<cr>", noremap)
