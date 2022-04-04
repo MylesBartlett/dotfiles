@@ -516,7 +516,7 @@ opt.undoreload = 100000
 
 -- maintain undo history between session
 opt.undofile = true
-opt.undodir = "~/.config/nvim/undodir"
+opt.undodir = "./.undodir"
 
 -- Highlight on yank
 cmd([[au TextYankPost * lua vim.highlight.on_yank {on_visual = false}]])
@@ -804,6 +804,7 @@ local coq = require("coq")
 
 lspconfig.pyright.setup({
 	on_attach = on_attach,
+	exclude = { "**/undodir", "**/~" },
 	settings = {
 		python = {
 			analysis = {
