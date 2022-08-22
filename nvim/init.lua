@@ -77,6 +77,7 @@ require("packer").startup(function(use)
 
 	-- colorscheme
 	use({ "ellisonleao/gruvbox.nvim" })
+	-- use({ 'B4mbus/oxocarbon-lua.nvim' })
 
 	-- show content of registers
 	use("tversteeg/registers.nvim")
@@ -135,8 +136,10 @@ require("packer").startup(function(use)
 	-- Text objects
 	use("wellle/targets.vim")
 
-	-- defines a new text object, based on indentation levels
+	-- defines new text objects based on indentation levels
 	use("michaeljsmith/vim-indent-object")
+	-- adds indentation guides to all lines (including empty lines).
+	use({ "lukas-reineke/indent-blankline.nvim" })
 
 	-- better quickfix windows (including fzf-support and floating previews)
 	use({ "kevinhwang91/nvim-bqf" })
@@ -155,6 +158,9 @@ require("packer").startup(function(use)
 	use({ "folke/trouble.nvim", requires = "kyazdani42/nvim-web-devicons" })
 
 	use({ "stevearc/aerial.nvim" })
+
+	use({ "norcalli/nvim-colorizer.lua" })
+
 end)
 
 ---------------------------
@@ -547,21 +553,25 @@ g["lightline#bufferline#show_number"] = 2
 ---------------------------
 --    various plugins    --
 ---------------------------
+-- indent_blacnkline
+require("indent_blankline").setup {
+    show_end_of_line = true,
+    space_char_blankline = " ",
+    -- show_current_context = true,
+    use_treesitter = true,
+    -- use_treesitter_scope = true,
+    -- show_current_context_start = true,
+}
+
 -- quick scope
 g.qs_highlight_on_keys = { "f", "F", "t", "T" }
 
 -- vimtex
--- g.vimtex_view_method = 'skim'
--- Disable overfull/underfull \hbox and all package warnings
 g.vimtex_quickfix_ignore_filters = { 'Missing "pages" in' }
-g.vimtex_quickfix_latexlog = {
-	overfull = 0,
-	underfull = 0,
-	pages = 0,
-	packages = {
-		default = 0,
-	},
-}
+g.vimtex_view_method = 'skim'
+g.vimtex_view_skim_sync = 1 -- Value 1 allows forward search after every successful compilation
+g.vimtex_view_skim_activate = 1  -- Value 1 allows change focus to skim after command `:VimtexView` is given
+g.vimtex_quickfix_ignore_filters = { 'Missing "pages" in', 'Underfull', 'Overfull' }
 
 -- lastplace
 require("nvim-lastplace").setup({
@@ -730,6 +740,7 @@ ts.setup({
 vim.o.background = "dark"
 vim.opt.termguicolors = true
 vim.cmd("colorscheme gruvbox")
+-- vim.cmd("colorscheme oxocarbon-lua")
 execute([[hi TreesitterContext ctermbg=gray guibg=Gray]])
 
 ---------------------------
@@ -832,9 +843,24 @@ lspconfig.rust_analyzer.setup({
 	},
 })
 
--- when highlighting other occurances of a variable
--- don't highlight the variable itself
-g.Illuminate_highlightUnderCursor = 0
+ 
+--- vim-illuminate [https://github.com/RRethy/vim-illuminate]
+require('illuminate').configure({
+    -- providers: provider used to get references in the buffer, ordered by priority
+    providers = {
+        'lsp',
+        'treesitter',
+        'regex',
+    },
+    -- delay: delay in milliseconds
+    delay = 100,
+    -- filetypes_denylist: filetypes to not illuminate, this overrides filetypes_allowlist
+    filetypes_denylist = {
+        'dirvish',
+        'fugitive',
+    },
+    under_cursor = true,
+})
 
 ---------------------------
 --    LSP Diagnostics    --
