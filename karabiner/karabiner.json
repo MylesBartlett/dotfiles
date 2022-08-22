@@ -127,16 +127,6 @@
                         },
                         {
                             "from": {
-                                "key_code": "right_alt"
-                            },
-                            "to": [
-                                {
-                                    "key_code": "caps_lock"
-                                }
-                            ]
-                        },
-                        {
-                            "from": {
                                 "key_code": "right_command"
                             },
                             "to": [

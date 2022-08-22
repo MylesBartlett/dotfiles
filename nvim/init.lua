@@ -77,7 +77,6 @@ require("packer").startup(function(use)
 
 	-- colorscheme
 	use({ "ellisonleao/gruvbox.nvim" })
-	-- use({ 'B4mbus/oxocarbon-lua.nvim' })
 
 	-- show content of registers
 	use("tversteeg/registers.nvim")
@@ -260,6 +259,21 @@ require("fzf-lua").setup({
 			["<S-left>"] = "preview-page-reset",
 		},
 	},
+       fzf = {
+          -- fzf '--bind=' options
+          ["ctrl-z"]      = "abort",
+          ["ctrl-u"]      = "unix-line-discard",
+          ["ctrl-f"]      = "half-page-down",
+          ["ctrl-b"]      = "half-page-up",
+          ["ctrl-a"]      = "beginning-of-line",
+          ["ctrl-e"]      = "end-of-line",
+          ["alt-a"]       = "toggle-all",
+          -- Only valid with fzf previewers (bat/cat/git/etc)
+          ["f3"]          = "toggle-preview-wrap",
+          ["f4"]          = "toggle-preview",
+          ["shift-down"]  = "preview-page-down",
+          ["shift-up"]    = "preview-page-up",
+        },
 	-- use skim instead of fzf?
 	-- https://github.com/lotabout/skim
 	-- fzf_bin          = 'sk',
@@ -572,6 +586,7 @@ g.vimtex_view_method = 'skim'
 g.vimtex_view_skim_sync = 1 -- Value 1 allows forward search after every successful compilation
 g.vimtex_view_skim_activate = 1  -- Value 1 allows change focus to skim after command `:VimtexView` is given
 g.vimtex_quickfix_ignore_filters = { 'Missing "pages" in', 'Underfull', 'Overfull' }
+g.vimtex_compiler_latexmk = { build_dir = './latexmk/' }
 
 -- lastplace
 require("nvim-lastplace").setup({
@@ -740,7 +755,6 @@ ts.setup({
 vim.o.background = "dark"
 vim.opt.termguicolors = true
 vim.cmd("colorscheme gruvbox")
--- vim.cmd("colorscheme oxocarbon-lua")
 execute([[hi TreesitterContext ctermbg=gray guibg=Gray]])
 
 ---------------------------
