@@ -1,4 +1,4 @@
----------------------------
+-------------------------
 --      shorthands       --
 ---------------------------
 local cmd = vim.cmd -- to execute Vim commands i.e., like :Format
@@ -77,6 +77,7 @@ require("packer").startup(function(use)
 
 	-- colorscheme
 	use({ "ellisonleao/gruvbox.nvim" })
+	use({ "kartikp10/noctis.nvim", requires = { "rktjmp/lush.nvim" } })
 
 	-- show content of registers
 	use("tversteeg/registers.nvim")
@@ -119,8 +120,18 @@ require("packer").startup(function(use)
 	-- latex support
 	use("lervag/vimtex")
 
-	-- digram-based/cross-line f/t movement
-	use("ggandor/lightspeed.nvim")
+	-- web-based markdown preview
+	use({
+	    "iamcco/markdown-preview.nvim",
+	    run = function() vim.fn["mkdp#util#install"]() end,
+	})
+
+	-- digram-based
+	use("ggandor/leap.nvim")
+	-- leap=enhanced f/t movement
+	use("ggandor/flit.nvim")
+	-- higkight the first occurrence of every char within the current line
+	-- use("jinh0/eyeliner.nvim")
 
 	-- easy window resizing
 	use({ "simeji/winresizer" })
@@ -154,12 +165,11 @@ require("packer").startup(function(use)
 
 	-- Provides a pretty list for showing diagnostics, references, telescope results, quickfix
 	-- and location lists to help you solve all the trouble your code is causing.
-	use({ "folke/trouble.nvim", requires = "kyazdani42/nvim-web-devicons" })
+	-- use({ "folke/trouble.nvim", requires = "kyazdani42/nvim-web-devicons" })
 
 	use({ "stevearc/aerial.nvim" })
 
 	use({ "norcalli/nvim-colorizer.lua" })
-
 end)
 
 ---------------------------
@@ -205,11 +215,15 @@ map("n", "<C-l>", "<C-\\><C-n><C-w>l", noremap)
 -- In terminal mode
 map("t", "<C-w>", "<C-\\><C-n>", noremap)
 
--- lightspeed settings
-require("lightspeed").setup({
-	ignore_case = true,
-	repeat_ft_with_target_char = true,
-})
+-- leap
+require('leap').add_default_mappings()
+-- flit
+require('flit').setup {
+  keys = { f = 'f', F = 'F', t = 't', T = 'T' },
+  -- A string like "nv", "nvo", "o", etc.
+  labeled_modes = "nvo",
+  multiline = true,
+}
 
 -- fzf-lua
 map("n", "<C-p>", "<cmd>lua require('fzf-lua').files()<CR>", { noremap = true, silent = true })
@@ -259,21 +273,21 @@ require("fzf-lua").setup({
 			["<S-left>"] = "preview-page-reset",
 		},
 	},
-       fzf = {
-          -- fzf '--bind=' options
-          ["ctrl-z"]      = "abort",
-          ["ctrl-u"]      = "unix-line-discard",
-          ["ctrl-f"]      = "half-page-down",
-          ["ctrl-b"]      = "half-page-up",
-          ["ctrl-a"]      = "beginning-of-line",
-          ["ctrl-e"]      = "end-of-line",
-          ["alt-a"]       = "toggle-all",
-          -- Only valid with fzf previewers (bat/cat/git/etc)
-          ["f3"]          = "toggle-preview-wrap",
-          ["f4"]          = "toggle-preview",
-          ["shift-down"]  = "preview-page-down",
-          ["shift-up"]    = "preview-page-up",
-        },
+	fzf = {
+		-- fzf '--bind=' options
+		["ctrl-z"] = "abort",
+		["ctrl-u"] = "unix-line-discard",
+		["ctrl-f"] = "half-page-down",
+		["ctrl-b"] = "half-page-up",
+		["ctrl-a"] = "beginning-of-line",
+		["ctrl-e"] = "end-of-line",
+		["alt-a"] = "toggle-all",
+		-- Only valid with fzf previewers (bat/cat/git/etc)
+		["f3"] = "toggle-preview-wrap",
+		["f4"] = "toggle-preview",
+		["shift-down"] = "preview-page-down",
+		["shift-up"] = "preview-page-up",
+	},
 	-- use skim instead of fzf?
 	-- https://github.com/lotabout/skim
 	-- fzf_bin          = 'sk',
@@ -568,25 +582,33 @@ g["lightline#bufferline#show_number"] = 2
 --    various plugins    --
 ---------------------------
 -- indent_blacnkline
-require("indent_blankline").setup {
-    show_end_of_line = true,
-    space_char_blankline = " ",
-    -- show_current_context = true,
-    use_treesitter = true,
-    -- use_treesitter_scope = true,
-    -- show_current_context_start = true,
-}
+require("indent_blankline").setup({
+	show_end_of_line = true,
+	space_char_blankline = " ",
+	-- show_current_context = true,
+	use_treesitter = true,
+	-- use_treesitter_scope = true,
+	-- show_current_context_start = true,
+})
 
 -- quick scope
 g.qs_highlight_on_keys = { "f", "F", "t", "T" }
 
 -- vimtex
 g.vimtex_quickfix_ignore_filters = { 'Missing "pages" in' }
-g.vimtex_view_method = 'skim'
+g.vimtex_view_method = "skim"
 g.vimtex_view_skim_sync = 1 -- Value 1 allows forward search after every successful compilation
-g.vimtex_view_skim_activate = 1  -- Value 1 allows change focus to skim after command `:VimtexView` is given
-g.vimtex_quickfix_ignore_filters = { 'Missing "pages" in', 'Underfull', 'Overfull' }
-g.vimtex_compiler_latexmk = { build_dir = './latexmk/' }
+g.vimtex_view_skim_activate = 1 -- Value 1 allows change focus to skim after command `:VimtexView` is given
+g.vimtex_quickfix_ignore_filters = { 'Missing "pages" in', "Underfull", "Overfull" }
+g.vimtex_compiler_latexmk = {
+	build_dir = "./latexmk/",
+	options = {
+		"-shell-escape",
+		"-verbose",
+		"-interaction=nonstopmode",
+		"-synctex=1",
+	},
+}
 
 -- lastplace
 require("nvim-lastplace").setup({
@@ -626,7 +648,7 @@ require("toggleterm").setup({
 })
 
 --- trouble [ https://github.com/folke/trouble.nvim ]
-require("trouble").setup({
+--[[ require("trouble").setup({
 	position = "right", -- position of the list can be: bottom, top, left, right
 	height = 10, -- height of the trouble list when position is top or bottom
 	width = 30, -- width of the list when position is left or right
@@ -672,7 +694,7 @@ require("trouble").setup({
 		other = "﫠",
 	},
 	use_diagnostic_signs = true, -- enabling this will use the signs defined in your lsp client
-})
+}) ]]
 
 vim.api.nvim_set_keymap("n", "<leader>tt", "<cmd>Trouble<cr>", { silent = true, noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>tw", "<cmd>Trouble workspace_diagnostics<cr>", { silent = true, noremap = true })
@@ -755,7 +777,9 @@ ts.setup({
 vim.o.background = "dark"
 vim.opt.termguicolors = true
 vim.cmd("colorscheme gruvbox")
-execute([[hi TreesitterContext ctermbg=gray guibg=Gray]])
+-- vim.cmd("colorscheme noctis")
+-- execute([[hi TreesitterContext ctermbg=gray guibg=Gray]])
+-- colorscheme noctis
 
 ---------------------------
 --        icons          --
@@ -857,23 +881,22 @@ lspconfig.rust_analyzer.setup({
 	},
 })
 
- 
 --- vim-illuminate [https://github.com/RRethy/vim-illuminate]
-require('illuminate').configure({
-    -- providers: provider used to get references in the buffer, ordered by priority
-    providers = {
-        'lsp',
-        'treesitter',
-        'regex',
-    },
-    -- delay: delay in milliseconds
-    delay = 100,
-    -- filetypes_denylist: filetypes to not illuminate, this overrides filetypes_allowlist
-    filetypes_denylist = {
-        'dirvish',
-        'fugitive',
-    },
-    under_cursor = true,
+require("illuminate").configure({
+	-- providers: provider used to get references in the buffer, ordered by priority
+	providers = {
+		"lsp",
+		"treesitter",
+		"regex",
+	},
+	-- delay: delay in milliseconds
+	delay = 100,
+	-- filetypes_denylist: filetypes to not illuminate, this overrides filetypes_allowlist
+	filetypes_denylist = {
+		"dirvish",
+		"fugitive",
+	},
+	under_cursor = true,
 })
 
 ---------------------------
@@ -949,7 +972,7 @@ hi DiagnosticSignHint     guifg=#3e6e9e ctermfg=75
 
 --- EFM LSP for async formatting/linting ---
 local on_attach = function(client)
-	if client.resolved_capabilities.document_formatting then
+	if client.server_capabilities.document_formatting then
 		vim.api.nvim_command([[augroup Format]])
 		vim.api.nvim_command([[autocmd! * <buffer>]])
 		vim.api.nvim_command([[autocmd BufWritePost <buffer> lua vim.lsp.buf.formatting()]])
@@ -996,4 +1019,3 @@ require("vim.treesitter.query").set_query(
 (comment) @comment
 ]]
 )
-
