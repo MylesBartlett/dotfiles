@@ -221,7 +221,7 @@ require('leap').add_default_mappings()
 require('flit').setup {
   keys = { f = 'f', F = 'F', t = 't', T = 'T' },
   -- A string like "nv", "nvo", "o", etc.
-  labeled_modes = "nvo",
+  labeled_modes = "nv",
   multiline = true,
 }
 
