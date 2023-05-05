@@ -122,8 +122,10 @@ require("packer").startup(function(use)
 
 	-- web-based markdown preview
 	use({
-	    "iamcco/markdown-preview.nvim",
-	    run = function() vim.fn["mkdp#util#install"]() end,
+		"iamcco/markdown-preview.nvim",
+		run = function()
+			vim.fn["mkdp#util#install"]()
+		end,
 	})
 
 	-- digram-based
@@ -217,30 +219,30 @@ map("n", "<C-l>", "<C-\\><C-n><C-w>l", noremap)
 map("t", "<C-w>", "<C-\\><C-n>", noremap)
 
 -- leap
-require('leap').add_default_mappings()
+require("leap").add_default_mappings()
 -- flit
-require('flit').setup {
-  keys = { f = 'f', F = 'F', t = 't', T = 'T' },
-  -- A string like "nv", "nvo", "o", etc.
-  labeled_modes = "nv",
-  multiline = true,
-}
+require("flit").setup({
+	keys = { f = "f", F = "F", t = "t", T = "T" },
+	-- A string like "nv", "nvo", "o", etc.
+	labeled_modes = "nv",
+	multiline = true,
+})
 -- leap-spooky
-require('leap-spooky').setup {
-  affixes = {
-    -- These will generate mappings for all native text objects, like:
-    -- (ir|ar|iR|aR|im|am|iM|aM){obj}.
-    -- Special line objects will also be added, by repeating the affixes.
-    -- E.g. `yrr<leap>` and `ymm<leap>` will yank a line in the current
-    -- window.
-    -- You can also use 'rest' & 'move' as mnemonics.
-    remote   = { window = 'r', cross_window = 'R' },
-    magnetic = { window = 'm', cross_window = 'M' },
-  },
-  -- If this option is set to true, the yanked text will automatically be pasted
-  -- at the cursor position if the unnamed register is in use.
-  paste_on_remote_yank = false,
-}
+require("leap-spooky").setup({
+	affixes = {
+		-- These will generate mappings for all native text objects, like:
+		-- (ir|ar|iR|aR|im|am|iM|aM){obj}.
+		-- Special line objects will also be added, by repeating the affixes.
+		-- E.g. `yrr<leap>` and `ymm<leap>` will yank a line in the current
+		-- window.
+		-- You can also use 'rest' & 'move' as mnemonics.
+		remote = { window = "r", cross_window = "R" },
+		magnetic = { window = "m", cross_window = "M" },
+	},
+	-- If this option is set to true, the yanked text will automatically be pasted
+	-- at the cursor position if the unnamed register is in use.
+	paste_on_remote_yank = false,
+})
 
 -- fzf-lua
 map("n", "<C-p>", "<cmd>lua require('fzf-lua').files()<CR>", { noremap = true, silent = true })
@@ -292,6 +294,7 @@ require("fzf-lua").setup({
 	},
 	fzf = {
 		-- fzf '--bind=' options
+		["ctrl-y"] = "select-all+accept",
 		["ctrl-z"] = "abort",
 		["ctrl-u"] = "unix-line-discard",
 		["ctrl-f"] = "half-page-down",
@@ -617,15 +620,15 @@ g.vimtex_view_method = "skim"
 g.vimtex_view_skim_sync = 1 -- Value 1 allows forward search after every successful compilation
 g.vimtex_view_skim_activate = 1 -- Value 1 allows change focus to skim after command `:VimtexView` is given
 g.vimtex_quickfix_ignore_filters = { 'Missing "pages" in', "Underfull", "Overfull" }
-g.vimtex_compiler_latexmk = {
-	build_dir = "./latexmk/",
+--[[ g.vimtex_compiler_latexmk = {
+	build_dir = ".",
 	options = {
 		"-shell-escape",
 		"-verbose",
 		"-interaction=nonstopmode",
 		"-synctex=1",
 	},
-}
+} ]]
 
 -- lastplace
 require("nvim-lastplace").setup({
@@ -726,38 +729,113 @@ require("aerial").setup({
 	highlight_closest = true,
 	-- Highlight the symbol in the source buffer when cursor is in the aerial win
 	highlight_on_hover = true,
-	-- These control the width of the aerial window.
-	-- They can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
-	-- min_width and max_width can be a list of mixed types.
-	-- max_width = {40, 0.2} means "the lesser of 40 columns or 20% of total"
-	max_width = { 40, 0.2 },
-	width = nil,
-	min_width = 20,
-	-- Show box drawing characters for the tree hierarchy
 	show_guides = false,
 	-- Automatically open aerial when entering supported buffers.
 	-- This can be a function (see :help aerial-open-automatic)
 	open_automatic = false,
-	-- Enum: prefer_right, prefer_left, right, left, float
-	-- Determines the default direction to open the aerial window. The 'prefer'
-	-- options will open the window in the other direction *if* there is a
-	-- different buffer in the way of the preferred direction
-	default_direction = "prefer_left",
+	layout = {
+		-- These control the width of the aerial window.
+		-- They can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
+		-- min_width and max_width can be a list of mixed types.
+		-- max_width = {40, 0.2} means "the lesser of 40 columns or 20% of total"
+		max_width = { 40, 0.2 },
+		width = nil,
+		min_width = 10,
 
+		-- key-value pairs of window-local options for aerial window (e.g. winhl)
+		win_opts = {},
+
+		-- Determines the default direction to open the aerial window. The 'prefer'
+		-- options will open the window in the other direction *if* there is a
+		-- different buffer in the way of the preferred direction
+		-- Enum: prefer_right, prefer_left, right, left, float
+		default_direction = "prefer_left",
+
+		-- Determines where the aerial window will be opened
+		--   edge   - open aerial at the far right/left of the editor
+		--   window - open aerial to the right/left of the current window
+		placement = "window",
+
+		-- Preserve window size equality with (:help CTRL-W_=)
+		preserve_equality = false,
+	},
+
+	backends = { "treesitter", "lsp", "markdown", "man" },
+	lsp = {
+		-- Fetch document symbols when LSP diagnostics update.
+		-- If false, will update on buffer changes.
+		diagnostics_trigger_update = true,
+
+		-- Set to false to not update the symbols when there are LSP errors
+		update_when_errors = true,
+
+		-- How long to wait (in ms) after a buffer change before updating
+		-- Only used when diagnostics_trigger_update = false
+		update_delay = 300,
+	},
+
+	treesitter = {
+		-- How long to wait (in ms) after a buffer change before updating
+		update_delay = 300,
+	},
+
+	markdown = {
+		-- How long to wait (in ms) after a buffer change before updating
+		update_delay = 300,
+	},
+
+	man = {
+		-- How long to wait (in ms) after a buffer change before updating
+		update_delay = 300,
+	},
+
+	-- Keymaps in aerial window. Can be any value that `vim.keymap.set` accepts OR a table of keymap
+	-- options with a `callback` (e.g. { callback = function() ... end, desc = "", nowait = true })
+	-- Additionally, if it is a string that matches "aerial.<name>",
+	-- it will use the mapping at require("aerial.action").<name>
+	-- Set to `false` to remove a keymap
+	keymaps = {
+		["?"] = "actions.show_help",
+		["g?"] = "actions.show_help",
+		["<CR>"] = "actions.jump",
+		["<2-LeftMouse>"] = "actions.jump",
+		["<C-v>"] = "actions.jump_vsplit",
+		["<C-s>"] = "actions.jump_split",
+		["p"] = "actions.scroll",
+		["<C-j>"] = "actions.down_and_scroll",
+		["<C-k>"] = "actions.up_and_scroll",
+		["{"] = "actions.prev",
+		["}"] = "actions.next",
+		["[["] = "actions.prev_up",
+		["]]"] = "actions.next_up",
+		["q"] = "actions.close",
+		["o"] = "actions.tree_toggle",
+		["za"] = "actions.tree_toggle",
+		["O"] = "actions.tree_toggle_recursive",
+		["zA"] = "actions.tree_toggle_recursive",
+		["l"] = "actions.tree_open",
+		["zo"] = "actions.tree_open",
+		["L"] = "actions.tree_open_recursive",
+		["zO"] = "actions.tree_open_recursive",
+		["h"] = "actions.tree_close",
+		["zc"] = "actions.tree_close",
+		["H"] = "actions.tree_close_recursive",
+		["zC"] = "actions.tree_close_recursive",
+		["zr"] = "actions.tree_increase_fold_level",
+		["zR"] = "actions.tree_open_all",
+		["zm"] = "actions.tree_decrease_fold_level",
+		["zM"] = "actions.tree_close_all",
+		["zx"] = "actions.tree_sync_folds",
+		["zX"] = "actions.tree_sync_folds",
+	},
+
+	-- Call this function when aerial attaches to a buffer.
 	on_attach = function(bufnr)
-		-- Toggle the aerial window with <leader>a
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>l", "<cmd>AerialToggle!<CR>", {})
-		-- Jump forwards/backwards with '{' and '}'
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "{", "<cmd>AerialPrev<CR>", {})
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "}", "<cmd>AerialNext<CR>", {})
-		-- Jump up the tree with '[[' or ']]'
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "[[", "<cmd>AerialPrevUp<CR>", {})
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "]]", "<cmd>AerialNextUp<CR>", {})
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "]]", "<cmd>AerialNextUp<CR>", {})
+		-- fzf integration
+		map("n", "<C-f>", "<cmd>call aerial#fzf()<cr>", { silent = true, noremap = true })
 	end,
 })
--- fzf integration
-map("n", "<C-f>", "<cmd>call aerial#fzf()<cr>", { silent = true, noremap = true })
+vim.keymap.set("n", "<leader>l", "<cmd>AerialToggle!<CR>")
 
 ---------------------------
 --     Treesitter        --
@@ -821,55 +899,43 @@ require("nvim-web-devicons").setup({
 ---------------------------
 --         LSP           --
 ---------------------------
-local on_attach = function(client, bufnr)
-	require("completion").on_attach()
+-- Use LspAttach autocommand to only map the following keys
+-- after the language server attaches to the current buffer
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    -- Enable completion triggered by <c-x><c-o>
+    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-	local function buf_set_keymap(...)
-		vim.api.nvim_buf_set_keymap(bufnr, ...)
-	end
-	local function buf_set_option(...)
-		vim.api.nvim_buf_set_option(bufnr, ...)
-	end
-
-	buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
-
-	---------------------------
-	--   LSP key mappings    --
-	---------------------------
-	local opts = { noremap = true, silent = true }
-	buf_set_keymap("n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-	buf_set_keymap("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
-	buf_set_keymap("n", "K", "<Cmd>lua vim.lsp.buf.hover()<CR>", opts)
-	buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-	buf_set_keymap("n", "<leader>k", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-	buf_set_keymap("n", "<leader>r", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-	buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-	-- diagnostics-related bindings
-	buf_set_keymap("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<CR>", opts)
-	buf_set_keymap("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<CR>", opts)
-	buf_set_keymap("n", "<C-k>", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
-
-	vim.api.nvim_command([[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()]])
-	-- nvim-lsputils-
-	vim.lsp.handlers["textDocument/codeAction"] = require("lsputil.codeAction").code_action_handler
-	vim.lsp.handlers["textDocument/references"] = require("lsputil.locations").references_handler
-	vim.lsp.handlers["textDocument/definition"] = require("lsputil.locations").definition_handler
-	vim.lsp.handlers["textDocument/declaration"] = require("lsputil.locations").declaration_handler
-	vim.lsp.handlers["textDocument/typeDefinition"] = require("lsputil.locations").typeDefinition_handler
-	vim.lsp.handlers["textDocument/implementation"] = require("lsputil.locations").implementation_handler
-	vim.lsp.handlers["textDocument/documentSymbol"] = require("lsputil.symbols").document_handler
-	vim.lsp.handlers["workspace/symbol"] = require("lsputil.symbols").workspace_handler
-
-	-- hook in plugins depending on LSP
-	require("illuminate").on_attach(client)
-	-- require("aerial").on_attach(client)
-end
+    -- Buffer local mappings.
+    -- See `:help vim.lsp.*` for documentation on any of the below functions
+    local opts = { buffer = ev.buf }
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    --[[ vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wl', function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, opts) ]]
+    vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
+    vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, opts)
+    vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.api.nvim_command([[autocmd BufWritePre <buffer> lua vim.lsp.buf.format()]])
+    vim.keymap.set('n', '\\f', function()
+      vim.lsp.buf.format { async = true }
+    end, opts)
+  end,
+})
 
 local lspconfig = require("lspconfig")
 local coq = require("coq")
 
 lspconfig.pyright.setup({
-	on_attach = on_attach,
+	-- on_attach = on_attach,
 	exclude = { "**/undodir", "**/~" },
 	settings = {
 		python = {
@@ -881,7 +947,7 @@ lspconfig.pyright.setup({
 	},
 })
 lspconfig.rust_analyzer.setup({
-	on_attach = on_attach,
+	-- on_attach = on_attach,
 	settings = {
 		["rust-analyzer"] = {
 			assist = {
@@ -924,10 +990,10 @@ require("illuminate").configure({
 -- No virtual text (distracting!), show popup window on hover.
 -- @see https://github.com/neovim/neovim/pull/16057 for new APIs
 vim.diagnostic.config({
-	virtual_text = false,
+	virtual_text = true,
 	underline = {
 		-- Do not underline text when severity is low (INFO or HINT).
-		severity = { min = vim.diagnostic.severity.WARN },
+		-- severity = { min = vim.diagnostic.severity.WARN },
 	},
 	float = {
 		source = "always",
@@ -1003,8 +1069,9 @@ lspconfig.efm.setup({
 	filetypes = { "python", "yaml" },
 })
 
+local set_query = vim.treesitter.query.set or vim.treesitter.set_query -- renamed in nvim 0.9
 -- inject reST syntax highlighting into python docstrings
-require("vim.treesitter.query").set_query(
+set_query(
 	"python",
 	"injections",
 	[[
@@ -1014,25 +1081,25 @@ require("vim.treesitter.query").set_query(
   arguments: (argument_list (string) @regex))
  (#eq? @_re "re")
  (#lua-match? @regex "^r.*"))
-​
+
 ; Module docstring
 ((module . (expression_statement (string) @rst))
  (#offset! @rst 0 3 0 -3))
-​
+
 ; Class docstring
 ((class_definition
   body: (block . (expression_statement (string) @rst)))
  (#offset! @rst 0 3 0 -3))
-​
+
 ; Function/method docstring
 ((function_definition
   body: (block . (expression_statement (string) @rst)))
  (#offset! @rst 0 3 0 -3))
-​
+
 ; Attribute docstring
 (((expression_statement (assignment)) . (expression_statement (string) @rst))
  (#offset! @rst 0 3 0 -3))
-​
+
 (comment) @comment
 ]]
 )

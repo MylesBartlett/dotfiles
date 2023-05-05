@@ -13,6 +13,10 @@ tools:
     format-command: 'black --quiet -'
     format-stdin: true
 
+  python-ruff: &python-ruff
+    format-command: 'ruff --quiet -'
+    format-stdin: true
+
   python-isort: &python-isort
     format-command: 'isort --stdout -'
     format-stdin: true
@@ -37,10 +41,11 @@ tools:
 
 languages:
   python:
-    - <<: *python-flake8
     - <<: *python-black
-    - <<: *python-isort
     - <<: *python-darglint
+    - <<: *python-flake8
+    - <<: *python-isort
+    - <<: *python-ruff
 
   lua:
     - <<: *lua-lua-format
