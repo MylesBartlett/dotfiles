@@ -1036,13 +1036,6 @@ _G.LspDiagnosticsPopupHandler = function()
 end
 
 vim.o.updatetime = 100
-vim.cmd([[
-augroup LSPDiagnosticsOnHover
-  autocmd!
-  autocmd CursorHold * lua _G.LspDiagnosticsPopupHandler()
-augroup END
-]])
-
 vim.fn.sign_define("DiagnosticSignError", { text = "✘", texthl = "DiagnosticSignError" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn" })
 vim.fn.sign_define("DiagnosticSignInfo", { text = "i", texthl = "DiagnosticSignInfo" })
