@@ -1,7 +1,3 @@
----------------------------
---      leader key       --
----------------------------
-vim.keymap.set("n", "<SPACE>", "<Nop>")
 vim.g.mapleader = " "
 
 ---------------------------
@@ -14,14 +10,14 @@ vim.opt.completeopt = { "menuone", "noinsert", "noselect" }
 ----------------------------
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-	vim.fn.system({
-		"git",
-		"clone",
-		"--filter=blob:none",
-		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable", -- latest stable release
-		lazypath,
-	})
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable", -- latest stable release
+        lazypath,
+    })
 end
 vim.opt.rtp:prepend(lazypath)
 -- Initialize plugins (specs are stored in the nvim/lua/plugins/ dir)
@@ -56,7 +52,12 @@ vim.keymap.set("n", "c#", '?\\<<C-R>=expand("<cword>")<CR>\\>\\C<CR>``cgn', nore
 
 -- global selection
 vim.keymap.set("x", "ie", "gg0gG$", { silent = true })
-vim.keymap.set("o", "ie", 'cmd<C-U>execute "normal! m`"<Bar>keepjumps normal! ggVG<CR> ', { silent = true })
+vim.keymap.set(
+    "o",
+    "ie",
+    'cmd<C-U>execute "normal! m`"<Bar>keepjumps normal! ggVG<CR> ',
+    { silent = true }
+)
 
 -- window movement
 -- In normal mode
@@ -72,10 +73,10 @@ require("leap").add_default_mappings()
 require("leap-spooky").setup({})
 -- flit
 require("flit").setup({
-	keys = { f = "f", F = "F", t = "t", T = "T" },
-	-- A string like "nv", "nvo", "o", etc.
-	labeled_modes = "nv",
-	multiline = true,
+    keys = { f = "f", F = "F", t = "t", T = "T" },
+    -- A string like "nv", "nvo", "o", etc.
+    labeled_modes = "nv",
+    multiline = true,
 })
 
 -- buffer change
@@ -102,10 +103,6 @@ vim.keymap.set("n", "<leader>c7", "<Plug>lightline#bufferline#delete(7)")
 vim.keymap.set("n", "<leader>c8", "<Plug>lightline#bufferline#delete(8)")
 vim.keymap.set("n", "<leader>c9", "<Plug>lightline#bufferline#delete(9)")
 vim.keymap.set("n", "<leader>c10", "<Plug>lightline#bufferline#delete(10)")
--- Gina
-vim.keymap.set("n", "<leader>gs", "<cmd>Gina status<cr>")
-vim.keymap.set("n", "<leader>gc", "<cmd>Gina commit<cr>")
-vim.keymap.set("n", "<leader>gp", "<cmd>Gina push<cr>")
 
 ---------------------------
 --    global settings    --
@@ -128,8 +125,8 @@ vim.opt.cmdheight = 2
 vim.opt.incsearch = true
 vim.opt.hlsearch = false
 vim.opt.smartindent = true -- Insert indents automatically
-vim.opt.splitbelow = true -- Put new windows below current
-vim.opt.splitright = true -- Put new windows right of current
+vim.opt.splitbelow = true  -- Put new windows below current
+vim.opt.splitright = true  -- Put new windows right of current
 vim.opt.inccommand = "nosplit"
 vim.opt.exrc = true
 vim.opt.secure = true
@@ -151,19 +148,19 @@ vim.cmd([[au TextYankPost * lua vim.highlight.on_yank {on_visual = false}]])
 ---------------------------
 vim.opt.showmode = false
 vim.g.lightline = {
-	colorscheme = "one",
-	active = {
-		left = { { "mode", "paste" }, { "readonly", "relativepath", "modified" } },
-	},
-	tabline = {
-		left = { { "buffers" } },
-	},
-	component_expand = {
-		buffers = "lightline#bufferline#buffers",
-	},
-	component_type = {
-		buffers = "tabsel",
-	},
+    colorscheme = "one",
+    active = {
+        left = { { "mode", "paste" }, { "readonly", "relativepath", "modified" } },
+    },
+    tabline = {
+        left = { { "buffers" } },
+    },
+    component_expand = {
+        buffers = "lightline#bufferline#buffers",
+    },
+    component_type = {
+        buffers = "tabsel",
+    },
 }
 vim.g.lightline.component = { lineinfo = "%3l/%L  col %-2v", percent = "" }
 vim.opt.showtabline = 2
@@ -174,48 +171,48 @@ vim.g["lightline#bufferline#show_number"] = 2
 ---------------------------
 -- indent_blankline
 require("indent_blankline").setup({
-	show_end_of_line = true,
-	space_char_blankline = " ",
-	-- show_current_context = true,
-	use_treesitter = true,
-	-- show_current_context_start = true,
+    show_end_of_line = true,
+    space_char_blankline = " ",
+    -- show_current_context = true,
+    use_treesitter = true,
+    -- show_current_context_start = true,
 })
 
 -- lastplace
 require("nvim-lastplace").setup({
-	lastplace_ignore_buftype = { "quickfix", "nofile", "help" },
-	lastplace_ignore_filetype = { "gitcommit", "gitrebase", "svn", "hgcommit" },
-	lastplace_open_folds = true,
+    lastplace_ignore_buftype = { "quickfix", "nofile", "help" },
+    lastplace_ignore_filetype = { "gitcommit", "gitrebase", "svn", "hgcommit" },
+    lastplace_open_folds = true,
 })
 
 -- bqf [ https://github.com/kevinhwang91/nvim-bqf ]
 require("bqf").setup({
-	auto_enable = true,
-	auto_resize_height = true, -- highly recommended enable
-	preview = {
-		win_height = 12,
-		win_vheight = 12,
-	},
+    auto_enable = true,
+    auto_resize_height = true, -- highly recommended enable
+    preview = {
+        win_height = 12,
+        win_vheight = 12,
+    },
 })
 
 -- toggleterm [ https://github.com/akinsho/toggleterm.nvim ]
 require("toggleterm").setup({
-	-- size can be a number or function which is passed the current terminal
-	size = function(term)
-		if term.direction == "horizontal" then
-			return 12
-		elseif term.direction == "vertical" then
-			return vim.o.columns * 0.35
-		end
-	end,
-	open_mapping = [[<c-\>]],
-	shade_terminals = false,
-	start_in_insert = false,
-	insert_mappings = true, -- whether or not the open mapping applies in insert mode
-	terminal_mappings = true, -- whether or not the open mapping applies in the opened terminals
-	persist_size = true,
-	close_on_exit = true, -- close the terminal window when the process exits
-	shell = vim.o.shell, -- change the default shell
+    -- size can be a number or function which is passed the current terminal
+    size = function(term)
+        if term.direction == "horizontal" then
+            return 12
+        elseif term.direction == "vertical" then
+            return vim.o.columns * 0.35
+        end
+    end,
+    open_mapping = [[<c-\>]],
+    shade_terminals = false,
+    start_in_insert = false,
+    insert_mappings = true, -- whether or not the open mapping applies in insert mode
+    terminal_mappings = true, -- whether or not the open mapping applies in the opened terminals
+    persist_size = true,
+    close_on_exit = true,  -- close the terminal window when the process exits
+    shell = vim.o.shell,   -- change the default shell
 })
 
 ---------------------------
@@ -230,33 +227,33 @@ vim.opt.termguicolors = true
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
 vim.api.nvim_create_autocmd("LspAttach", {
-	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
-	callback = function(ev)
-		-- Enable completion triggered by <c-x><c-o>
-		vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+    group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+    callback = function(ev)
+        -- Enable completion triggered by <c-x><c-o>
+        vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
 
-		-- Buffer local mappings.
-		-- See `:help vim.lsp.*` for documentation on any of the below functions
-		local opts = { buffer = ev.buf }
-		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-		vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-		vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-		vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
-		--[[ vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+        -- Buffer local mappings.
+        -- See `:help vim.lsp.*` for documentation on any of the below functions
+        local opts = { buffer = ev.buf }
+        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+        vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+        vim.keymap.set("n", "<leader>k", vim.lsp.buf.signature_help, opts)
+        --[[ vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
     vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
     vim.keymap.set('n', '<space>wl', function()
       print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, opts) ]]
-		vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts)
-		vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, opts)
-		vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
-		vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-		vim.api.nvim_command([[autocmd BufWritePre <buffer> lua vim.lsp.buf.format()]])
-		vim.keymap.set("n", "\\f", function()
-			vim.lsp.buf.format({ async = true })
-		end, opts)
-	end,
+        vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts)
+        vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, opts)
+        vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
+        vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+        vim.api.nvim_command([[autocmd BufWritePre <buffer> lua vim.lsp.buf.format()]])
+        vim.keymap.set("n", "\\f", function()
+            vim.lsp.buf.format({ async = true })
+        end, opts)
+    end,
 })
 
 ---------------------------
@@ -267,58 +264,68 @@ vim.api.nvim_create_autocmd("LspAttach", {
 -- No virtual text (distracting!), show popup window on hover.
 -- @see https://github.com/neovim/neovim/pull/16057 for new APIs
 vim.diagnostic.config({
-	virtual_text = true,
-	underline = {
-		-- Do not underline text when severity is low (INFO or HINT).
-		-- severity = { min = vim.diagnostic.severity.WARN },
-	},
-	float = {
-		source = "always",
-		focusable = false, -- See neovim#16425
-		border = "single",
+    virtual_text = true,
+    underline = {
+        -- Do not underline text when severity is low (INFO or HINT).
+        -- severity = { min = vim.diagnostic.severity.WARN },
+    },
+    float = {
+        source = "always",
+        focusable = false, -- See neovim#16425
+        border = "single",
 
-		-- Customize how diagnostic message will be shown: show error code.
-		format = function(diagnostic)
-			-- See null-ls.nvim#632, neovim#17222 for how to pick up `code`
-			local user_data
-			user_data = diagnostic.user_data or {}
-			user_data = user_data.lsp or user_data.null_ls or user_data
-			local code = (diagnostic.symbol or diagnostic.code or user_data.symbol or user_data.code)
-			if code then
-				return string.format("%s (%s)", diagnostic.message, code)
-			else
-				return diagnostic.message
-			end
-		end,
-	},
+        -- Customize how diagnostic message will be shown: show error code.
+        format = function(diagnostic)
+            -- See null-ls.nvim#632, neovim#17222 for how to pick up `code`
+            local user_data
+            user_data = diagnostic.user_data or {}
+            user_data = user_data.lsp or user_data.null_ls or user_data
+            local code = (
+                diagnostic.symbol
+                or diagnostic.code
+                or user_data.symbol
+                or user_data.code
+            )
+            if code then
+                return string.format("%s (%s)", diagnostic.message, code)
+            else
+                return diagnostic.message
+            end
+        end,
+    },
 })
 
-_G.LspDiagnosticsShowPopup = function()
-	return vim.diagnostic.open_float(0, { focus = false, scope = "cursor" })
-end
-
-_G.LspDiagnosticsPopupHandler = function()
-	local current_cursor = vim.api.nvim_win_get_cursor(0)
-	local last_popup_cursor = vim.w.lsp_diagnostics_last_cursor or { nil, nil }
-
-	-- Show the popup diagnostics window,
-	-- but only once for the current cursor location (unless moved afterwards).
-	if not (current_cursor[1] == last_popup_cursor[1] and current_cursor[2] == last_popup_cursor[2]) then
-		vim.w.lsp_diagnostics_last_cursor = current_cursor
-		local _, winnr = _G.LspDiagnosticsShowPopup()
-		if winnr ~= nil then
-			vim.api.nvim_win_set_option(winnr, "winblend", 20) -- opacity for diagnostics
-		end
-	end
-end
-
-vim.o.updatetime = 100
-vim.fn.sign_define("DiagnosticSignError", { text = "✘", texthl = "DiagnosticSignError" })
-vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn" })
-vim.fn.sign_define("DiagnosticSignInfo", { text = "i", texthl = "DiagnosticSignInfo" })
-vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
-vim.cmd([[
-hi DiagnosticSignError    guifg=#e6645f ctermfg=167
-hi DiagnosticSignWarn     guifg=#b1b14d ctermfg=143
-hi DiagnosticSignHint     guifg=#3e6e9e ctermfg=75
-]])
+-- _G.LspDiagnosticsShowPopup = function()
+--     return vim.diagnostic.open_float(0, { focus = false, scope = "cursor" })
+-- end
+--
+-- _G.LspDiagnosticsPopupHandler = function()
+--     local current_cursor = vim.api.nvim_win_get_cursor(0)
+--     local last_popup_cursor = vim.w.lsp_diagnostics_last_cursor or { nil, nil }
+--
+--     -- Show the popup diagnostics window,
+--     -- but only once for the current cursor location (unless moved afterwards).
+--     if
+--         not (
+--             current_cursor[1] == last_popup_cursor[1]
+--             and current_cursor[2] == last_popup_cursor[2]
+--         )
+--     then
+--         vim.w.lsp_diagnostics_last_cursor = current_cursor
+--         local _, winnr = _G.LspDiagnosticsShowPopup()
+--         if winnr ~= nil then
+--             vim.api.nvim_win_set_option(winnr, "winblend", 20) -- opacity for diagnostics
+--         end
+--     end
+-- end
+--
+-- vim.o.updatetime = 100
+-- vim.fn.sign_define("DiagnosticSignError", { text = "✘", texthl = "DiagnosticSignError" })
+-- vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn" })
+-- vim.fn.sign_define("DiagnosticSignInfo", { text = "i", texthl = "DiagnosticSignInfo" })
+-- vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
+-- vim.cmd([[
+-- hi DiagnosticSignError    guifg=#e6645f ctermfg=167
+-- hi DiagnosticSignWarn     guifg=#b1b14d ctermfg=143
+-- hi DiagnosticSignHint     guifg=#3e6e9e ctermfg=75
+-- ]])
